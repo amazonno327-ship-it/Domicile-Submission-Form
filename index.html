@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domicile Submission Form - Online Portal & PDF Generator</title>
+    <!-- Tailwind CSS for responsive layout & toolbar styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2pdf.js for direct 1-click A4 PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base screen styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 0;
+            color: #0f172a;
+        }
+
+        /* Modern Left Sidebar Inputs (inspired by image_ee95c3.png) */
+        .modern-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 6px;
+        }
+
+        .modern-input {
+            width: 100%;
+            height: 44px;
+            padding: 0 14px;
+            border-radius: 12px;
+            border: 1.5px solid #e2e8f0;
+            background-color: #ffffff;
+            font-size: 14px;
+            color: #0f172a;
+            outline: none;
+            transition: all 0.18s ease;
+            box-sizing: border-box;
+        }
+
+        .modern-input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .modern-input:focus {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
+        }
+
+        /* Mobile composite input box matching image_ee95c3.png */
+        .mobile-input-group {
+            display: flex;
+            align-items: center;
+            height: 44px;
+            border-radius: 12px;
+            border: 1.5px solid #e2e8f0;
+            background-color: #ffffff;
+            overflow: hidden;
+            transition: all 0.18s ease;
+        }
+
+        .mobile-input-group:focus-within {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
+        }
+
+        .network-select {
+            height: 100%;
+            padding: 0 10px 0 12px;
+            border: none;
+            border-right: 1.5px solid #e2e8f0;
+            background-color: #f8fafc;
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .mobile-raw-input {
+            flex: 1;
+            height: 100%;
+            border: none;
+            padding: 0 14px;
+            font-size: 14px;
+            color: #0f172a;
+            outline: none;
+            background: transparent;
+            letter-spacing: 0.4px;
+        }
+
+        .mobile-raw-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .helper-text {
+            font-size: 11.5px;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        /* Official A4 Document Sheet styling (Exact replica of image_eefb3f.png) */
+        .a4-sheet {
+            width: 210mm;
+            min-height: 296mm;
+            background: #ffffff;
+            margin: 0 auto;
+            padding: 14mm 15mm;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            position: relative;
+            color: #000000;
+        }
+
+        /* Exact Form Typography matching the uploaded image */
+        .form-heading {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #000000;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .doc-heading {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #000000;
+            margin-top: 22px;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        /* Official Form Tables */
+        .official-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            border: 1.5px solid #000000;
+        }
+
+        .official-table td {
+            border: 1px solid #000000;
+            padding: 0;
+            height: 25px;
+            vertical-align: middle;
+        }
+
+        /* Left Column Labels (~35% width) */
+        .label-cell {
+            width: 35%;
+            padding-left: 7px !important;
+            padding-right: 6px !important;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #000000;
+            background-color: #ffffff;
+            white-space: nowrap;
+        }
+
+        /* Right Column Live Output Cells (~65% width) */
+        .value-cell {
+            width: 65%;
+            background-color: #ffffff;
+            padding: 1px 8px !important;
+            font-family: "Times New Roman", Times, Georgia, serif;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #000000;
+            text-transform: uppercase;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .value-cell-flush {
+            width: 65%;
+            background-color: #ffffff;
+            padding: 0 !important;
+        }
+
+        /* Digit Grid for NIC (13 boxes) & Mobile (11 boxes) */
+        .digit-grid-13 {
+            display: grid;
+            grid-template-columns: repeat(13, 1fr);
+            width: 100%;
+            height: 27px;
+        }
+
+        .digit-grid-11 {
+            display: grid;
+            grid-template-columns: repeat(11, 1fr);
+            width: 100%;
+            height: 27px;
+        }
+
+        .digit-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            border-right: 1px solid #000000;
+            font-family: "Times New Roman", Times, Georgia, serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: #000000;
+            background: #ffffff;
+        }
+
+        .digit-box:last-child {
+            border-right: none;
+        }
+
+        /* Split row styling matching image (Tehsil & Marital Status) */
+        .split-cell-wrapper {
+            display: flex;
+            width: 100%;
+            height: 25px;
+            align-items: center;
+        }
+
+        .split-cell-part {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            font-family: "Times New Roman", Times, Georgia, serif;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #000000;
+            text-transform: uppercase;
+            box-sizing: border-box;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        /* Document Attached Table (~38% width matching image) */
+        .doc-table {
+            width: 38%;
+            min-width: 265px;
+            border-collapse: collapse;
+            table-layout: fixed;
+            border: 1.5px solid #000000;
+        }
+
+        .doc-table td {
+            border: 1px solid #000000;
+            height: 24px;
+            padding: 0;
+            vertical-align: middle;
+        }
+
+        .doc-label-cell {
+            width: 71%;
+            padding-left: 7px !important;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .doc-check-cell {
+            width: 29%;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        /* Native Print Media Rules */
+        @media print {
+            body {
+                background: #ffffff !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .preview-pane {
+                padding: 0 !important;
+                overflow: visible !important;
+                background: #ffffff !important;
+            }
+            .a4-sheet {
+                width: 100% !important;
+                min-height: auto !important;
+                margin: 0 !important;
+                padding: 8mm 10mm !important;
+                box-shadow: none !important;
+            }
+            @page {
+                size: A4 portrait;
+                margin: 6mm;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Status Notification Toast -->
+    <div id="toastBanner" class="no-print fixed bottom-4 right-4 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-slate-900 text-white text-xs sm:text-sm font-medium px-4 py-3 rounded-xl shadow-lg border border-slate-700 flex items-center gap-2">
+            <span id="toastIcon" class="text-emerald-400 font-bold">✓</span>
+            <span id="toastMessage">PDF generated successfully!</span>
+        </div>
+    </div>
+
+    <!-- Main Split-Screen Workspace -->
+    <div class="min-h-screen flex flex-col lg:flex-row">
+
+        <!-- =========================================================
+             LEFT PANEL: Modern Input Form Sidebar (image_ee95c3.png)
+             ========================================================= -->
+        <aside class="no-print w-full lg:w-[440px] xl:w-[480px] lg:h-screen lg:sticky lg:top-0 bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col z-20 shadow-sm">
+            
+            <!-- Sidebar Sticky Header -->
+            <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between bg-white sticky top-0 z-10">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-base shadow-sm">
+                        D
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-slate-900 leading-tight">Enter Applicant Details</h1>
+                        <p class="text-xs text-slate-500">Live updates on the A4 form preview</p>
+                    </div>
+                </div>
+                <button type="button" onclick="clearForm()"
+                    class="px-3 py-1.5 rounded-lg text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition cursor-pointer">
+                    Clear / Reset
+                </button>
+            </div>
+
+            <!-- Scrollable Form Inputs -->
+            <div class="flex-1 overflow-y-auto p-5 space-y-4 bg-slate-50/60">
+
+                <!-- Full Name -->
+                <div>
+                    <label for="inFullName" class="modern-label">Full Name</label>
+                    <input type="text" id="inFullName" class="modern-input" placeholder="e.g. HAFIZ MUAZ SAQIB" oninput="syncForm()">
+                </div>
+
+                <!-- Father / Husband Name -->
+                <div>
+                    <label for="inFatherName" class="modern-label">Father / Husband Name</label>
+                    <input type="text" id="inFatherName" class="modern-input" placeholder="e.g. SAQIB HUSSAIN JANJUA" oninput="syncForm()">
+                </div>
+
+                <!-- Mobile Number & CNIC Number (2-col grid on wider screens matching image_ee95c3.png) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <!-- Mobile Number -->
+                    <div>
+                        <label for="inMobile" class="modern-label">Mobile Number</label>
+                        <div class="mobile-input-group">
+                            <select id="inNetwork" class="network-select" aria-label="Network Prefix" onchange="handleNetworkChange()">
+                                <option value="">03xx</option>
+                                <option value="030">Jazz (030)</option>
+                                <option value="031">Zong (031)</option>
+                                <option value="032">Warid (032)</option>
+                                <option value="033">Ufone (033)</option>
+                                <option value="034">Telenor (034)</option>
+                                <option value="035">SCOM (035)</option>
+                            </select>
+                            <input type="text" id="inMobile" inputmode="numeric" maxlength="12" class="mobile-raw-input" placeholder="03xx-xxxxxxx" oninput="handleMobileInput(this)">
+                        </div>
+                        <p class="helper-text">Format: 03XX-XXXXXXX (11 digits)</p>
+                    </div>
+
+                    <!-- CNIC Number -->
+                    <div>
+                        <label for="inCnic" class="modern-label">CNIC Number</label>
+                        <input type="text" id="inCnic" inputmode="numeric" maxlength="15" class="modern-input tracking-wider font-medium" placeholder="_____-_______-_" oninput="handleCnicInput(this)">
+                        <p class="helper-text">Format: XXXXX-XXXXXXX-X (13 digits)</p>
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div>
+                    <label for="inAddress" class="modern-label">Address</label>
+                    <input type="text" id="inAddress" class="modern-input" placeholder="e.g. PO KHAS CHACK NO 38 , TEHSIL & DISTRICT MANDI BAHAUDDIN" oninput="syncForm()">
+                </div>
+
+                <!-- Place & Tehsil -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                        <label for="inPlace" class="modern-label">Place</label>
+                        <input type="text" id="inPlace" class="modern-input" placeholder="e.g. MANDI BAHAUDDIN" oninput="syncForm()">
+                    </div>
+                    <div>
+                        <label for="inTehsil" class="modern-label">Tehsil</label>
+                        <input type="text" id="inTehsil" class="modern-input" placeholder="e.g. MANDI BAHAUDDIN" oninput="syncForm()">
+                    </div>
+                </div>
+
+                <!-- Date of Arrival & Date of Birth -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                        <label for="inDateArrival" class="modern-label">Date of Arrival</label>
+                        <input type="text" id="inDateArrival" class="modern-input" placeholder="e.g. 29-07-2008" oninput="syncForm()">
+                    </div>
+                    <div>
+                        <label for="inDob" class="modern-label">Date of Birth</label>
+                        <input type="text" id="inDob" class="modern-input" placeholder="e.g. 29-07-2008" oninput="syncForm()">
+                    </div>
+                </div>
+
+                <!-- Occupation & Mark of Identification -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                        <label for="inOccupation" class="modern-label">Occupation</label>
+                        <input type="text" id="inOccupation" class="modern-input" placeholder="e.g. STUDENT" oninput="syncForm()">
+                    </div>
+                    <div>
+                        <label for="inMarkId" class="modern-label">Mark of Identification</label>
+                        <input type="text" id="inMarkId" class="modern-input" placeholder="e.g. NIL" oninput="syncForm()">
+                    </div>
+                </div>
+
+                <!-- NIC Holder & Marital Status -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                        <label for="inNicHolder" class="modern-label">NIC Holder</label>
+                        <input type="text" id="inNicHolder" class="modern-input" placeholder="e.g. SELF / FATHER" oninput="syncForm()">
+                    </div>
+                    <div>
+                        <label for="inMarital" class="modern-label">Marital Status</label>
+                        <select id="inMarital" class="modern-input cursor-pointer" onchange="syncForm()">
+                            <option value="">Select Status</option>
+                            <option value="NO">NO (Unmarried)</option>
+                            <option value="YES">YES (Married)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Spouse Name & Remarks -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                        <label for="inSpouse" class="modern-label">Spouse Name</label>
+                        <input type="text" id="inSpouse" class="modern-input" placeholder="If married" oninput="syncForm()">
+                    </div>
+                    <div>
+                        <label for="inRemarks" class="modern-label">Remarks</label>
+                        <input type="text" id="inRemarks" class="modern-input" placeholder="Optional notes" oninput="syncForm()">
+                    </div>
+                </div>
+
+                <!-- Document Attached Checkboxes -->
+                <div class="pt-2">
+                    <div class="flex items-center justify-between mb-2.5">
+                        <span class="modern-label mb-0">Document Attached</span>
+                        <span class="text-[11px] text-slate-500">Select attached files</span>
+                    </div>
+                    <div id="docCheckboxGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-white p-3.5 rounded-xl border border-slate-200">
+                        <!-- Dynamically populated 14 checkboxes -->
+                    </div>
+                </div>
+
+            </div>
+        </aside>
+
+        <!-- =========================================================
+             RIGHT PANEL: Live A4 Document Preview + Download PDF
+             ========================================================= -->
+        <section class="flex-1 flex flex-col bg-slate-200/80 min-w-0">
+            
+            <!-- Sticky Top Action Bar -->
+            <header class="no-print sticky top-0 z-10 bg-white/95 backdrop-blur border-b border-slate-300 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+                <div class="flex items-center gap-2.5">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Live Form Preview
+                    </span>
+                    <span class="text-xs text-slate-500 hidden md:inline">A4 Official Print Layout</span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="fillSampleData()"
+                        class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 transition cursor-pointer">
+                        Fill Sample Data
+                    </button>
+                    <button type="button" onclick="window.print()"
+                        class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-sky-600 hover:bg-sky-500 text-white transition cursor-pointer hidden sm:inline-flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                        </svg>
+                        Print
+                    </button>
+                    <button type="button" id="downloadPdfBtn" onclick="downloadPDF()"
+                        class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition cursor-pointer inline-flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        <span>Download PDF</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Scrollable A4 Sheet Viewport -->
+            <div class="preview-pane flex-1 overflow-auto p-4 sm:p-6 lg:p-8 flex justify-center items-start">
+                <main id="domicileFormSheet" class="a4-sheet">
+                    
+                    <!-- Section 1 Heading -->
+                    <div class="form-heading">DOMICILE SUBMISSION FORM:</div>
+
+                    <!-- Main Applicant Information Table -->
+                    <table class="official-table" aria-label="Domicile Submission Form">
+                        <tbody>
+                            <!-- Row 1: Full Name -->
+                            <tr>
+                                <td class="label-cell">Full Name:</td>
+                                <td class="value-cell" id="outFullName"></td>
+                            </tr>
+
+                            <!-- Row 2: Father / Husband Name -->
+                            <tr>
+                                <td class="label-cell">Father / Husband Name:</td>
+                                <td class="value-cell" id="outFatherName"></td>
+                            </tr>
+
+                            <!-- Row 3: Address -->
+                            <tr>
+                                <td class="label-cell">Address:</td>
+                                <td class="value-cell" id="outAddress"></td>
+                            </tr>
+
+                            <!-- Row 4: Place -->
+                            <tr>
+                                <td class="label-cell">Place:</td>
+                                <td class="value-cell" id="outPlace"></td>
+                            </tr>
+
+                            <!-- Row 5: Tehsil (with vertical divider around midpoint matching image_eefb3f.png) -->
+                            <tr>
+                                <td class="label-cell">Tehsil:</td>
+                                <td class="value-cell-flush">
+                                    <div class="split-cell-wrapper">
+                                        <div id="outTehsil" class="split-cell-part" style="width: 34.5%; border-right: 1px solid #000000;"></div>
+                                        <div class="split-cell-part" style="width: 65.5%;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 6: Date of Arrival -->
+                            <tr>
+                                <td class="label-cell">Date of Arrival:</td>
+                                <td class="value-cell" id="outDateArrival"></td>
+                            </tr>
+
+                            <!-- Row 7: Occupation -->
+                            <tr>
+                                <td class="label-cell">Occupation:</td>
+                                <td class="value-cell" id="outOccupation"></td>
+                            </tr>
+
+                            <!-- Row 8: Date of Birth (Exact spelling from image_eefb3f.png) -->
+                            <tr>
+                                <td class="label-cell">Date of Brith:</td>
+                                <td class="value-cell" id="outDob"></td>
+                            </tr>
+
+                            <!-- Row 9: Mark of Identification (Exact spelling from image_eefb3f.png) -->
+                            <tr>
+                                <td class="label-cell">Mark of Identifcation:</td>
+                                <td class="value-cell" id="outMarkId"></td>
+                            </tr>
+
+                            <!-- Row 10: NIC Holder -->
+                            <tr>
+                                <td class="label-cell">NIC Holder:</td>
+                                <td class="value-cell" id="outNicHolder"></td>
+                            </tr>
+
+                            <!-- Row 11: NIC Number (13 individual bordered boxes) -->
+                            <tr>
+                                <td class="label-cell" style="height: 27px;">NIC Number:</td>
+                                <td class="value-cell-flush" style="height: 27px;">
+                                    <div class="digit-grid-13" id="outNicGrid">
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 12: Marital Status (Right-aligned box displaying YES / NO matching image_eefb3f.png) -->
+                            <tr>
+                                <td class="label-cell">Marital Status:</td>
+                                <td class="value-cell-flush">
+                                    <div class="split-cell-wrapper">
+                                        <div class="split-cell-part" style="width: 64.5%; border-right: 1px solid #000000;"></div>
+                                        <div id="outMarital" class="split-cell-part" style="width: 35.5%;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 13: Spouse Name -->
+                            <tr>
+                                <td class="label-cell">Spouse Name:</td>
+                                <td class="value-cell" id="outSpouse"></td>
+                            </tr>
+
+                            <!-- Row 14: Remarks -->
+                            <tr>
+                                <td class="label-cell">Remarks:</td>
+                                <td class="value-cell" id="outRemarks"></td>
+                            </tr>
+
+                            <!-- Row 15: Mobile Number (11 individual bordered boxes) -->
+                            <tr>
+                                <td class="label-cell" style="height: 27px;">Mobile Number:</td>
+                                <td class="value-cell-flush" style="height: 27px;">
+                                    <div class="digit-grid-11" id="outMobileGrid">
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                        <div class="digit-box"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Section 2 Heading -->
+                    <div class="doc-heading">DOCUMENT ATTACHED:</div>
+
+                    <!-- Document Attached Checklist Table (14 exact items from image_eefb3f.png) -->
+                    <table class="doc-table" aria-label="Document Attached Checklist">
+                        <tbody id="outDocTableBody">
+                            <!-- Dynamically populated 14 rows -->
+                        </tbody>
+                    </table>
+
+                </main>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        /**
+         * Exact 14 Document Attached labels matching image_eefb3f.png
+         */
+        const DOCUMENT_ITEMS = [
+            "CNIC",
+            "Father CNIC",
+            "Husband CNIC",
+            "Birth Certifcate",
+            "Bank Receipt",
+            "Photographs",
+            "Property Documents",
+            "Utility Bill",
+            "Resident Certifcate",
+            "School Certifcate",
+            "Voter List",
+            "Dully Filled P1 Form",
+            "Domicile Affidavit",
+            "Form-B"
+        ];
+
+        /**
+         * Displays a non-intrusive toast message
+         */
+        let toastTimeout;
+        function showToast(message, isError = false) {
+            const banner = document.getElementById('toastBanner');
+            const msgEl = document.getElementById('toastMessage');
+            const iconEl = document.getElementById('toastIcon');
+
+            msgEl.textContent = message;
+            iconEl.textContent = isError ? '!' : '✓';
+            iconEl.className = isError ? 'text-rose-400 font-bold' : 'text-emerald-400 font-bold';
+
+            banner.classList.remove('translate-y-20', 'opacity-0');
+            banner.classList.add('translate-y-0', 'opacity-100');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                banner.classList.remove('translate-y-0', 'opacity-100');
+                banner.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        /**
+         * Initializes the 14 document checkboxes in the left sidebar
+         * and the corresponding 14 rows in the right A4 preview table
+         */
+        function initDocumentLists() {
+            const checkboxGrid = document.getElementById('docCheckboxGrid');
+            const docTableBody = document.getElementById('outDocTableBody');
+
+            checkboxGrid.innerHTML = '';
+            docTableBody.innerHTML = '';
+
+            DOCUMENT_ITEMS.forEach((label, index) => {
+                // Left sidebar modern checkbox item
+                const itemWrapper = document.createElement('label');
+                itemWrapper.className = 'flex items-center gap-2.5 p-2 rounded-lg hover:bg-slate-50 cursor-pointer select-none border border-transparent hover:border-slate-200 transition';
+                itemWrapper.innerHTML = `
+                    <input type="checkbox" id="docChk_${index}" data-doc-index="${index}"
+                        class="w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+                        onchange="syncDocuments()">
+                    <span class="text-xs font-medium text-slate-700">${label}</span>
+                `;
+                checkboxGrid.appendChild(itemWrapper);
+
+                // Right A4 preview table row
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="doc-label-cell">${label}:</td>
+                    <td class="doc-check-cell" id="outDocCheck_${index}"></td>
+                `;
+                docTableBody.appendChild(tr);
+            });
+        }
+
+        /**
+         * Formats CNIC as XXXXX-XXXXXXX-X while typing and updates the 13 live boxes
+         */
+        function handleCnicInput(input) {
+            const rawDigits = input.value.replace(/\D/g, '').slice(0, 13);
+            let formatted = '';
+
+            if (rawDigits.length > 0) {
+                formatted = rawDigits.slice(0, 5);
+            }
+            if (rawDigits.length > 5) {
+                formatted += '-' + rawDigits.slice(5, 12);
+            }
+            if (rawDigits.length > 12) {
+                formatted += '-' + rawDigits.slice(12, 13);
+            }
+
+            input.value = formatted;
+
+            // Populate the 13 individual boxes in the A4 preview
+            const boxes = document.querySelectorAll('#outNicGrid .digit-box');
+            boxes.forEach((box, idx) => {
+                box.textContent = rawDigits[idx] || '';
+            });
+        }
+
+        /**
+         * Handles network dropdown selection to pre-fill prefix in Mobile input
+         */
+        function handleNetworkChange() {
+            const networkSelect = document.getElementById('inNetwork');
+            const mobileInput = document.getElementById('inMobile');
+            const prefix = networkSelect.value;
+
+            if (prefix) {
+                const currentDigits = mobileInput.value.replace(/\D/g, '');
+                const restDigits = currentDigits.length > 3 ? currentDigits.slice(3) : '';
+                mobileInput.value = prefix + restDigits;
+                handleMobileInput(mobileInput);
+                mobileInput.focus();
+            }
+        }
+
+        /**
+         * Formats Mobile Number as 03XX-XXXXXXX while typing and updates the 11 live boxes
+         */
+        function handleMobileInput(input) {
+            const rawDigits = input.value.replace(/\D/g, '').slice(0, 11);
+            let formatted = '';
+
+            if (rawDigits.length > 0) {
+                formatted = rawDigits.slice(0, 4);
+            }
+            if (rawDigits.length > 4) {
+                formatted += '-' + rawDigits.slice(4, 11);
+            }
+
+            input.value = formatted;
+
+            // Populate the 11 individual boxes in the A4 preview
+            const boxes = document.querySelectorAll('#outMobileGrid .digit-box');
+            boxes.forEach((box, idx) => {
+                box.textContent = rawDigits[idx] || '';
+            });
+        }
+
+        /**
+         * Syncs all text/select inputs from the left sidebar to the right A4 preview
+         */
+        function syncForm() {
+            document.getElementById('outFullName').textContent = document.getElementById('inFullName').value.trim();
+            document.getElementById('outFatherName').textContent = document.getElementById('inFatherName').value.trim();
+            document.getElementById('outAddress').textContent = document.getElementById('inAddress').value.trim();
+            document.getElementById('outPlace').textContent = document.getElementById('inPlace').value.trim();
+            document.getElementById('outTehsil').textContent = document.getElementById('inTehsil').value.trim();
+            document.getElementById('outDateArrival').textContent = document.getElementById('inDateArrival').value.trim();
+            document.getElementById('outOccupation').textContent = document.getElementById('inOccupation').value.trim();
+            document.getElementById('outDob').textContent = document.getElementById('inDob').value.trim();
+            document.getElementById('outMarkId').textContent = document.getElementById('inMarkId').value.trim();
+            document.getElementById('outNicHolder').textContent = document.getElementById('inNicHolder').value.trim();
+            document.getElementById('outMarital').textContent = document.getElementById('inMarital').value.trim();
+            document.getElementById('outSpouse').textContent = document.getElementById('inSpouse').value.trim();
+            document.getElementById('outRemarks').textContent = document.getElementById('inRemarks').value.trim();
+        }
+
+        /**
+         * Syncs the 14 document checkboxes to the checkmark cells in the A4 preview
+         */
+        function syncDocuments() {
+            DOCUMENT_ITEMS.forEach((_, idx) => {
+                const checkbox = document.getElementById(`docChk_${idx}`);
+                const cell = document.getElementById(`outDocCheck_${idx}`);
+                if (checkbox && cell) {
+                    cell.textContent = checkbox.checked ? '✔' : '';
+                }
+            });
+        }
+
+        /**
+         * Fills sample data matching image_eefb3f.png for instant testing
+         */
+        function fillSampleData() {
+            document.getElementById('inFullName').value = 'HAFIZ MUAZ SAQIB';
+            document.getElementById('inFatherName').value = 'SAQIB HUSSAIN JANJUA';
+            document.getElementById('inAddress').value = 'PO KHAS CHACK NO 38 , TEHSIL & DISTRICT MANDI BAHAUDDIN';
+            document.getElementById('inPlace').value = 'MANDI BAHAUDDIN';
+            document.getElementById('inTehsil').value = 'MANDI BAHAUDDIN';
+            document.getElementById('inDateArrival').value = '29-07-2008';
+            document.getElementById('inOccupation').value = 'STUDENT';
+            document.getElementById('inDob').value = '29-07-2008';
+            document.getElementById('inMarkId').value = 'NIL';
+            document.getElementById('inNicHolder').value = 'SELF';
+            document.getElementById('inMarital').value = 'NO';
+            document.getElementById('inSpouse').value = '';
+            document.getElementById('inRemarks').value = '';
+
+            // Trigger masked CNIC & Mobile formatting
+            const cnicInput = document.getElementById('inCnic');
+            cnicInput.value = '3440241713109';
+            handleCnicInput(cnicInput);
+
+            document.getElementById('inNetwork').value = '030';
+            const mobileInput = document.getElementById('inMobile');
+            mobileInput.value = '03027747032';
+            handleMobileInput(mobileInput);
+
+            syncForm();
+            showToast('Sample applicant details loaded into preview.');
+        }
+
+        /**
+         * Clears all inputs and resets the live A4 preview
+         */
+        function clearForm() {
+            const textIds = [
+                'inFullName', 'inFatherName', 'inAddress', 'inPlace', 'inTehsil',
+                'inDateArrival', 'inOccupation', 'inDob', 'inMarkId', 'inNicHolder',
+                'inSpouse', 'inRemarks', 'inCnic', 'inMobile'
+            ];
+            textIds.forEach(id => {
+                document.getElementById(id).value = '';
+            });
+
+            document.getElementById('inNetwork').value = '';
+            document.getElementById('inMarital').value = '';
+
+            handleCnicInput(document.getElementById('inCnic'));
+            handleMobileInput(document.getElementById('inMobile'));
+            syncForm();
+
+            DOCUMENT_ITEMS.forEach((_, idx) => {
+                const chk = document.getElementById(`docChk_${idx}`);
+                if (chk) chk.checked = false;
+            });
+            syncDocuments();
+
+            showToast('Form cleared.');
+        }
+
+        /**
+         * Generates and downloads a single-page A4 PDF of the live document sheet
+         */
+        async function downloadPDF() {
+            const sheet = document.getElementById('domicileFormSheet');
+            const btn = document.getElementById('downloadPdfBtn');
+            const originalBtnHtml = btn.innerHTML;
+
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<span>Generating PDF...</span>';
+
+                // Build clean filename from Full Name if available
+                const rawName = document.getElementById('inFullName').value.trim();
+                const safeName = rawName
+                    ? rawName.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_')
+                    : 'Domicile_Submission_Form';
+                const filename = `${safeName}_Domicile_Form.pdf`;
+
+                // Temporarily normalize box shadow and height for exact single-page A4 capture
+                const prevBoxShadow = sheet.style.boxShadow;
+                const prevMinHeight = sheet.style.minHeight;
+                sheet.style.boxShadow = 'none';
+                sheet.style.minHeight = '280mm';
+
+                const opt = {
+                    margin:       [4, 4, 4, 4],
+                    filename:     filename,
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  {
+                        scale: 2,
+                        useCORS: true,
+                        letterRendering: true,
+                        scrollY: 0
+                    },
+                    jsPDF:        {
+                        unit: 'mm',
+                        format: 'a4',
+                        orientation: 'portrait'
+                    }
+                };
+
+                await html2pdf().set(opt).from(sheet).save();
+
+                sheet.style.boxShadow = prevBoxShadow;
+                sheet.style.minHeight = prevMinHeight;
+
+                showToast('A4 PDF downloaded successfully!');
+            } catch (error) {
+                console.error('PDF Generation Error:', error);
+                showToast('Opening browser print dialog...', true);
+                setTimeout(() => window.print(), 500);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalBtnHtml;
+            }
+        }
+
+        // Initialize document lists on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initDocumentLists();
+        });
+    </script>
+</body>
+</html>
