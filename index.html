@@ -3,121 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Domicile Submission Form - Online Portal & PDF Generator</title>
-    <!-- Tailwind CSS for responsive layout & toolbar styling -->
+    <title>e-Khidmat One-Window Portal | Citizen Forms & PDF Generator</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- html2pdf.js for direct 1-click A4 PDF generation -->
+    <!-- html2pdf.js for single-click A4 PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Inter & Noto Nastaliq Urdu for authentic Tasdeeq Nama & Form B Urdu -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
-        /* Base screen styling */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f1f5f9;
-            margin: 0;
-            padding: 0;
-            color: #0f172a;
+        :root {
+            --pk-green: #007A33;
+            --pk-green-dark: #005c26;
+            --pk-green-light: #e6f4ec;
+            --pk-gold: #c68a12;
         }
 
-        /* Modern Left Sidebar Inputs (inspired by image_ee95c3.png) */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #0f172a;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .urdu-font {
+            font-family: 'Noto Nastaliq Urdu', serif;
+            direction: rtl;
+        }
+
+        /* =========================================================
+           HERO ANIMATIONS (Umbrella, Smartphone & Floating Pills)
+           ========================================================= */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-7px); }
+        }
+
+        @keyframes floatDelayed {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-9px); }
+        }
+
+        @keyframes umbrellaSway {
+            0%, 100% { transform: rotate(-1.2deg) translateY(0px); }
+            50% { transform: rotate(1.2deg) translateY(-3px); }
+        }
+
+        @keyframes shimmerTitle {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .animate-float-1 { animation: floatSlow 3.8s ease-in-out infinite; }
+        .animate-float-2 { animation: floatDelayed 4.4s ease-in-out 0.6s infinite; }
+        .animate-float-3 { animation: floatSlow 4.1s ease-in-out 1.2s infinite; }
+        .animate-umbrella {
+            transform-origin: 50% 85%;
+            animation: umbrellaSway 5s ease-in-out infinite;
+        }
+
+        .animated-headline-badge {
+            background: linear-gradient(90deg, #007A33 0%, #16a34a 45%, #d97706 50%, #007A33 55%, #005c26 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmerTitle 4.5s linear infinite;
+        }
+
+        /* =========================================================
+           LEFT SIDEBAR CLEAN MODERN INPUTS (No Telecom Dropdowns)
+           ========================================================= */
         .modern-label {
             display: block;
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 700;
             color: #1e293b;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
         }
 
         .modern-input {
             width: 100%;
-            height: 44px;
-            padding: 0 14px;
-            border-radius: 12px;
-            border: 1.5px solid #e2e8f0;
+            height: 42px;
+            padding: 0 13px;
+            border-radius: 10px;
+            border: 1.5px solid #cbd5e1;
             background-color: #ffffff;
-            font-size: 14px;
+            font-size: 13.5px;
             color: #0f172a;
             outline: none;
-            transition: all 0.18s ease;
+            transition: all 0.16s ease;
             box-sizing: border-box;
         }
 
         .modern-input::placeholder {
             color: #94a3b8;
-            font-weight: 400;
         }
 
         .modern-input:focus {
-            border-color: #10b981;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
-        }
-
-        /* Mobile composite input box matching image_ee95c3.png */
-        .mobile-input-group {
-            display: flex;
-            align-items: center;
-            height: 44px;
-            border-radius: 12px;
-            border: 1.5px solid #e2e8f0;
-            background-color: #ffffff;
-            overflow: hidden;
-            transition: all 0.18s ease;
-        }
-
-        .mobile-input-group:focus-within {
-            border-color: #10b981;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
-        }
-
-        .network-select {
-            height: 100%;
-            padding: 0 10px 0 12px;
-            border: none;
-            border-right: 1.5px solid #e2e8f0;
-            background-color: #f8fafc;
-            font-size: 13px;
-            font-weight: 700;
-            color: #334155;
-            outline: none;
-            cursor: pointer;
-        }
-
-        .mobile-raw-input {
-            flex: 1;
-            height: 100%;
-            border: none;
-            padding: 0 14px;
-            font-size: 14px;
-            color: #0f172a;
-            outline: none;
-            background: transparent;
-            letter-spacing: 0.4px;
-        }
-
-        .mobile-raw-input::placeholder {
-            color: #94a3b8;
+            border-color: #007A33;
+            box-shadow: 0 0 0 3px rgba(0, 122, 51, 0.14);
         }
 
         .helper-text {
-            font-size: 11.5px;
+            font-size: 11px;
             color: #64748b;
-            margin-top: 5px;
+            margin-top: 4px;
         }
 
-        /* Official A4 Document Sheet styling (Exact replica of image_eefb3f.png) */
+        /* =========================================================
+           A4 OFFICIAL DOCUMENT SHEETS (Exact Print Proportions)
+           ========================================================= */
         .a4-sheet {
             width: 210mm;
             min-height: 296mm;
             background: #ffffff;
             margin: 0 auto;
-            padding: 14mm 15mm;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            padding: 13mm 15mm;
+            box-shadow: 0 12px 30px -6px rgba(15, 23, 42, 0.16);
             box-sizing: border-box;
             position: relative;
             color: #000000;
         }
 
-        /* Exact Form Typography matching the uploaded image */
+        /* --- FORM 1: DOMICILE SUBMISSION FORM --- */
         .form-heading {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 16px;
@@ -125,7 +137,6 @@
             text-transform: uppercase;
             color: #000000;
             margin-bottom: 6px;
-            letter-spacing: 0.2px;
         }
 
         .doc-heading {
@@ -134,12 +145,10 @@
             font-weight: 700;
             text-transform: uppercase;
             color: #000000;
-            margin-top: 22px;
+            margin-top: 20px;
             margin-bottom: 6px;
-            letter-spacing: 0.2px;
         }
 
-        /* Official Form Tables */
         .official-table {
             width: 100%;
             border-collapse: collapse;
@@ -154,7 +163,6 @@
             vertical-align: middle;
         }
 
-        /* Left Column Labels (~35% width) */
         .label-cell {
             width: 35%;
             padding-left: 7px !important;
@@ -163,14 +171,11 @@
             font-size: 11.5px;
             font-weight: 600;
             color: #000000;
-            background-color: #ffffff;
             white-space: nowrap;
         }
 
-        /* Right Column Live Output Cells (~65% width) */
         .value-cell {
             width: 65%;
-            background-color: #ffffff;
             padding: 1px 8px !important;
             font-family: "Times New Roman", Times, Georgia, serif;
             font-size: 12.5px;
@@ -183,11 +188,9 @@
 
         .value-cell-flush {
             width: 65%;
-            background-color: #ffffff;
             padding: 0 !important;
         }
 
-        /* Digit Grid for NIC (13 boxes) & Mobile (11 boxes) */
         .digit-grid-13 {
             display: grid;
             grid-template-columns: repeat(13, 1fr);
@@ -212,14 +215,12 @@
             font-size: 15px;
             font-weight: 700;
             color: #000000;
-            background: #ffffff;
         }
 
         .digit-box:last-child {
             border-right: none;
         }
 
-        /* Split row styling matching image (Tehsil & Marital Status) */
         .split-cell-wrapper {
             display: flex;
             width: 100%;
@@ -242,10 +243,9 @@
             white-space: nowrap;
         }
 
-        /* Document Attached Table (~38% width matching image) */
         .doc-table {
-            width: 38%;
-            min-width: 265px;
+            width: 39%;
+            min-width: 270px;
             border-collapse: collapse;
             table-layout: fixed;
             border: 1.5px solid #000000;
@@ -274,9 +274,72 @@
             font-size: 14px;
             font-weight: 700;
             color: #000000;
+            cursor: pointer;
+            user-select: none;
         }
 
-        /* Native Print Media Rules */
+        .doc-check-cell:hover {
+            background-color: #f0fdf4;
+        }
+
+        /* --- FORM 2: TASDEEQ NAMA (URDU) --- */
+        .tasdeeq-sheet {
+            font-family: 'Noto Nastaliq Urdu', serif;
+            direction: rtl;
+            text-align: right;
+            line-height: 2.35;
+            padding: 16mm 18mm;
+        }
+
+        .tasdeeq-ink-blue {
+            color: #1a35b8;
+        }
+
+        .tasdeeq-ink-black {
+            color: #000000;
+        }
+
+        /* --- FORM 3: FORM B (MEDICAL CERTIFICATE) --- */
+        .formb-sheet {
+            font-family: Arial, Helvetica, sans-serif;
+            padding: 12mm 16mm;
+            color: #000000;
+        }
+
+        .formb-cnic-grid {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            border: 1.2px solid #000000;
+            height: 28px;
+        }
+
+        .formb-cnic-cell {
+            border-right: 1px solid #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Times New Roman", Times, serif;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .formb-cnic-cell:last-child {
+            border-right: none;
+        }
+
+        .formb-line {
+            border-bottom: 1.2px solid #000000;
+            min-height: 20px;
+            padding: 0 6px;
+            font-family: "Times New Roman", Times, serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        /* =========================================================
+           NATIVE PRINT RULES (Zero UI chrome, single A4 page)
+           ========================================================= */
         @media print {
             body {
                 background: #ffffff !important;
@@ -305,368 +368,1140 @@
         }
     </style>
 </head>
-<body class="antialiased">
+<body>
 
-    <!-- Status Notification Toast -->
-    <div id="toastBanner" class="no-print fixed bottom-4 right-4 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-        <div class="bg-slate-900 text-white text-xs sm:text-sm font-medium px-4 py-3 rounded-xl shadow-lg border border-slate-700 flex items-center gap-2">
-            <span id="toastIcon" class="text-emerald-400 font-bold">✓</span>
-            <span id="toastMessage">PDF generated successfully!</span>
+    <!-- Non-Intrusive Status Toast -->
+    <div id="toastBanner" class="no-print fixed bottom-5 right-5 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-slate-900 text-white text-xs sm:text-sm font-medium px-4 py-3 rounded-xl shadow-xl border border-slate-700 flex items-center gap-2.5">
+            <span id="toastIcon" class="w-5 h-5 rounded-full bg-[#007A33] text-white flex items-center justify-center text-xs font-bold">✓</span>
+            <span id="toastMessage">Ready!</span>
         </div>
     </div>
 
-    <!-- Main Split-Screen Workspace -->
-    <div class="min-h-screen flex flex-col lg:flex-row">
+    <!-- =====================================================================
+         TOP GREEN ANNOUNCEMENT BAR (Dastak / Punjab Portal Style)
+         ===================================================================== -->
+    <div class="no-print bg-gradient-to-r from-[#5a8f29] via-[#007A33] to-[#00662b] text-white text-xs sm:text-[13px] py-2 px-4">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+                <span class="inline-block w-2 h-2 rounded-full bg-amber-300 animate-ping"></span>
+                <span class="font-medium tracking-wide">Citizen e-Facilitation Services — Mandi Bahauddin, Punjab</span>
+            </div>
+            <div class="flex items-center gap-2 font-bold tracking-wider uppercase text-[11px] sm:text-xs">
+                <span class="bg-white/15 px-2.5 py-0.5 rounded-full">One Window For All Citizen Forms &amp; PDF Downloads</span>
+            </div>
+        </div>
+    </div>
 
-        <!-- =========================================================
-             LEFT PANEL: Modern Input Form Sidebar (image_ee95c3.png)
-             ========================================================= -->
-        <aside class="no-print w-full lg:w-[440px] xl:w-[480px] lg:h-screen lg:sticky lg:top-0 bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col z-20 shadow-sm">
+    <!-- =====================================================================
+         MAIN WHITE NAVIGATION BAR (Official Emblem + Quick Switcher)
+         ===================================================================== -->
+    <nav class="no-print bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
             
-            <!-- Sidebar Sticky Header -->
-            <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between bg-white sticky top-0 z-10">
+            <!-- Brand Lockup matching reference image -->
+            <button type="button" onclick="navigateTo('home')" class="flex items-center gap-3 text-left cursor-pointer group focus:outline-none">
+                <!-- Circular Crescent & Wheat Emblem SVG -->
+                <div class="w-10 h-10 rounded-full bg-[#e6f4ec] border border-[#007A33]/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition">
+                    <svg class="w-7 h-7 text-[#007A33]" viewBox="0 0 64 64" fill="none">
+                        <circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="2.5" stroke-dasharray="3 2"/>
+                        <path d="M36 16C28.5 16 23 21.8 23 29C23 36.2 28.5 42 36 42C32.2 40.5 29.5 35.3 29.5 29C29.5 22.7 32.2 17.5 36 16Z" fill="currentColor"/>
+                        <polygon points="39,22 40.5,25.5 44.5,26 41.5,28.5 42.3,32.5 39,30.3 35.7,32.5 36.5,28.5 33.5,26 37.5,25.5" fill="#c68a12"/>
+                        <path d="M16 44C22 49 42 49 48 44" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                </div>
                 <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-base shadow-sm">
-                        D
+                    <div class="border-r border-slate-300 pr-2.5">
+                        <span class="block text-base sm:text-lg font-extrabold text-[#007A33] leading-none tracking-tight">e-KHIDMAT</span>
+                        <span class="block text-[9.5px] font-semibold text-slate-500 tracking-wider uppercase mt-0.5">Citizen Form Portal</span>
                     </div>
-                    <div>
-                        <h1 class="text-base font-bold text-slate-900 leading-tight">Enter Applicant Details</h1>
-                        <p class="text-xs text-slate-500">Live updates on the A4 form preview</p>
+                    <div class="hidden sm:block">
+                        <span class="block text-sm font-extrabold text-[#007A33] leading-none">One-Window</span>
+                        <span class="block text-[10px] font-bold text-[#c68a12] uppercase tracking-wide mt-0.5">Instant A4 PDF Service</span>
                     </div>
                 </div>
-                <button type="button" onclick="clearForm()"
-                    class="px-3 py-1.5 rounded-lg text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition cursor-pointer">
-                    Clear / Reset
-                </button>
+            </button>
+
+            <!-- Center/Right Navigation Links -->
+            <div class="hidden md:flex items-center gap-6 text-sm font-semibold">
+                <button type="button" onclick="navigateTo('home')" id="nav-home" class="nav-link text-[#007A33] font-bold cursor-pointer transition">Home</button>
+                <button type="button" onclick="navigateTo('domicile')" id="nav-domicile" class="nav-link text-slate-700 hover:text-[#007A33] cursor-pointer transition">Domicile Form</button>
+                <button type="button" onclick="navigateTo('tasdeeq')" id="nav-tasdeeq" class="nav-link text-slate-700 hover:text-[#007A33] cursor-pointer transition">تصدیق نامہ</button>
+                <button type="button" onclick="navigateTo('formb')" id="nav-formb" class="nav-link text-slate-700 hover:text-[#007A33] cursor-pointer transition">Form B (Medical)</button>
+                <a href="#how-it-works" onclick="navigateTo('home')" class="text-slate-600 hover:text-[#007A33] transition">How it works</a>
             </div>
 
-            <!-- Scrollable Form Inputs -->
-            <div class="flex-1 overflow-y-auto p-5 space-y-4 bg-slate-50/60">
+            <!-- Right Pill Action Buttons matching reference image -->
+            <div class="flex items-center gap-2">
+                <button type="button" onclick="navigateTo('domicile')"
+                    class="px-3.5 py-1.5 rounded-full text-xs font-bold border border-slate-300 text-slate-800 hover:border-[#007A33] hover:text-[#007A33] bg-white shadow-2xs transition cursor-pointer">
+                    Domicile PDF
+                </button>
+                <button type="button" onclick="navigateTo('formb')"
+                    class="hidden sm:inline-flex px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#007A33] hover:bg-[#005c26] text-white shadow-xs transition cursor-pointer">
+                    Form B PDF
+                </button>
+            </div>
+        </div>
+    </nav>
 
-                <!-- Full Name -->
-                <div>
-                    <label for="inFullName" class="modern-label">Full Name</label>
-                    <input type="text" id="inFullName" class="modern-input" placeholder="e.g. HAFIZ MUAZ SAQIB" oninput="syncForm()">
-                </div>
+    <!-- =====================================================================
+         VIEW 1: HOME PAGE (Dastak / Punjab Government One-Window Style)
+         ===================================================================== -->
+    <div id="view-home" class="no-print">
 
-                <!-- Father / Husband Name -->
-                <div>
-                    <label for="inFatherName" class="modern-label">Father / Husband Name</label>
-                    <input type="text" id="inFatherName" class="modern-input" placeholder="e.g. SAQIB HUSSAIN JANJUA" oninput="syncForm()">
-                </div>
+        <!-- HERO SECTION: Crisp White + Soft Cream Swoosh + Animated Umbrella/Phone -->
+        <section class="relative overflow-hidden bg-white border-b border-slate-100">
+            <!-- Subtle warm cream background wave swoosh matching reference image -->
+            <div class="pointer-events-none absolute inset-0 overflow-hidden">
+                <svg class="absolute bottom-0 left-1/4 w-[850px] h-[340px] opacity-55" viewBox="0 0 800 320" fill="none">
+                    <path d="M0 290 C 220 260, 320 120, 560 140 C 690 150, 760 80, 800 40 L 800 320 L 0 320 Z" fill="#fbf5e6"/>
+                </svg>
+            </div>
 
-                <!-- Mobile Number & CNIC Number (2-col grid on wider screens matching image_ee95c3.png) -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <!-- Mobile Number -->
-                    <div>
-                        <label for="inMobile" class="modern-label">Mobile Number</label>
-                        <div class="mobile-input-group">
-                            <select id="inNetwork" class="network-select" aria-label="Network Prefix" onchange="handleNetworkChange()">
-                                <option value="">03xx</option>
-                                <option value="030">Jazz (030)</option>
-                                <option value="031">Zong (031)</option>
-                                <option value="032">Warid (032)</option>
-                                <option value="033">Ufone (033)</option>
-                                <option value="034">Telenor (034)</option>
-                                <option value="035">SCOM (035)</option>
-                            </select>
-                            <input type="text" id="inMobile" inputmode="numeric" maxlength="12" class="mobile-raw-input" placeholder="03xx-xxxxxxx" oninput="handleMobileInput(this)">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14 lg:py-16 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+                    
+                    <!-- LEFT COLUMN: Official Badges + Bold Green/Gold Typography -->
+                    <div class="lg:col-span-6 space-y-5">
+                        <!-- Top Emblem Row -->
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full bg-[#e6f4ec] border-2 border-[#007A33] flex items-center justify-center text-[#007A33] shadow-xs">
+                                <svg class="w-7 h-7" viewBox="0 0 64 64" fill="none">
+                                    <path d="M36 14C27.5 14 21 20.8 21 29C21 37.2 27.5 44 36 44C31.5 42 28.5 36 28.5 29C28.5 22 31.5 16 36 14Z" fill="currentColor"/>
+                                    <polygon points="40,21 41.7,25 46,25.5 42.7,28.3 43.6,32.5 40,30.2 36.4,32.5 37.3,28.3 34,25.5 38.3,25" fill="#c68a12"/>
+                                    <path d="M14 46C22 52 42 52 50 46" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="px-3 py-1.5 rounded-lg bg-[#007A33] text-white text-xs font-bold tracking-wide shadow-xs">
+                                GOVERNMENT STANDARD A4 FORMS
+                            </div>
                         </div>
-                        <p class="helper-text">Format: 03XX-XXXXXXX (11 digits)</p>
+
+                        <!-- Animated Shimmer Top Pill -->
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#e6f4ec] border border-[#007A33]/25">
+                            <span class="w-2 h-2 rounded-full bg-[#007A33] animate-ping"></span>
+                            <span class="text-xs sm:text-sm font-extrabold uppercase tracking-wide animated-headline-badge">
+                                Download Form — Live Preview &amp; Instant PDF
+                            </span>
+                        </div>
+
+                        <p class="text-slate-600 text-base sm:text-lg font-medium">
+                            All official Domicile, Tasdeeq Nama &amp; Medical forms are now
+                        </p>
+
+                        <!-- Powered By Green Pill -->
+                        <div>
+                            <span class="inline-block px-3.5 py-1 rounded-full bg-gradient-to-r from-[#3f7d20] to-[#007A33] text-white text-xs font-bold shadow-xs">
+                                Powered by Digital Citizen Facilitation
+                            </span>
+                        </div>
+
+                        <!-- Main Hero Headline matching reference layout -->
+                        <div class="border-l-4 border-[#c68a12] pl-4 py-1">
+                            <h1 class="text-4xl sm:text-5xl font-extrabold text-[#007A33] tracking-tight leading-tight">
+                                One-Window
+                            </h1>
+                            <p class="text-xl sm:text-2xl font-bold text-[#c68a12] mt-1">
+                                for all Citizen &amp; Verification Forms
+                            </p>
+                        </div>
+
+                        <p class="text-sm sm:text-base text-slate-600 max-w-xl leading-relaxed">
+                            Fill out your details once in a clean side panel, watch the official A4 document update live in real time, attach your photograph where needed, and download a crisp print-ready PDF in one click.
+                        </p>
+
+                        <!-- CTA Buttons -->
+                        <div class="pt-2 flex flex-wrap items-center gap-3">
+                            <a href="#select-forms"
+                                class="px-6 py-3.5 rounded-full bg-[#007A33] hover:bg-[#005c26] text-white font-bold text-sm shadow-md hover:shadow-lg transition inline-flex items-center gap-2">
+                                <span>Select &amp; Fill Form</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </a>
+                            <button type="button" onclick="navigateTo('domicile')"
+                                class="px-5 py-3.5 rounded-full bg-white hover:bg-slate-50 text-[#007A33] border-2 border-[#007A33] font-bold text-sm transition cursor-pointer">
+                                Open Domicile Form →
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- CNIC Number -->
-                    <div>
-                        <label for="inCnic" class="modern-label">CNIC Number</label>
-                        <input type="text" id="inCnic" inputmode="numeric" maxlength="15" class="modern-input tracking-wider font-medium" placeholder="_____-_______-_" oninput="handleCnicInput(this)">
-                        <p class="helper-text">Format: XXXXX-XXXXXXX-X (13 digits)</p>
+                    <!-- RIGHT COLUMN: Animated Green Umbrella + Smartphone + 3 Clickable Pills -->
+                    <div class="lg:col-span-6 flex justify-center items-center relative py-4">
+                        <div class="relative w-full max-w-[470px] h-[390px] sm:h-[420px] flex items-center justify-center">
+                            
+                            <!-- Soft Yellow/Cream Halo Circle behind Phone (matching reference image) -->
+                            <div class="w-60 h-60 sm:w-68 sm:h-68 rounded-full bg-amber-100/80 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+
+                            <!-- Protective Green Umbrella Canopy SVG -->
+                            <div class="animate-umbrella absolute top-1 left-1/2 -translate-x-1/2 w-[360px] sm:w-[410px] z-20 pointer-events-none">
+                                <svg viewBox="0 0 420 155" fill="none" class="w-full drop-shadow-lg">
+                                    <!-- Top Tip -->
+                                    <rect x="207" y="4" width="6" height="16" rx="3" fill="#004d20"/>
+                                    <!-- Main Green Dome -->
+                                    <path d="M18 135 C 45 35, 130 16, 210 16 C 290 16, 375 35, 402 135 C 365 118, 330 118, 295 135 C 265 118, 235 118, 210 135 C 185 118, 155 118, 125 135 C 90 118, 55 118, 18 135 Z" fill="url(#umbrellaGrad)"/>
+                                    <!-- Umbrella Ribs -->
+                                    <path d="M210 16 C 175 45, 145 85, 125 135" stroke="#004d20" stroke-width="1.8" opacity="0.5"/>
+                                    <path d="M210 16 C 245 45, 275 85, 295 135" stroke="#004d20" stroke-width="1.8" opacity="0.5"/>
+                                    <path d="M210 16 L 210 135" stroke="#004d20" stroke-width="1.8" opacity="0.4"/>
+                                    <!-- Umbrella Branding Text -->
+                                    <text x="210" y="76" text-anchor="middle" fill="#ffffff" font-family="Inter, sans-serif" font-weight="800" font-size="22" letter-spacing="0.5">e-Khidmat</text>
+                                    <text x="210" y="95" text-anchor="middle" fill="#fde68a" font-family="Inter, sans-serif" font-weight="600" font-size="10.5" letter-spacing="1.2">ONE-WINDOW PDF PORTAL</text>
+                                    <defs>
+                                        <linearGradient id="umbrellaGrad" x1="210" y1="16" x2="210" y2="135" gradientUnits="userSpaceOnUse">
+                                            <stop offset="0%" stop-color="#0b9444"/>
+                                            <stop offset="100%" stop-color="#00662b"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+
+                            <!-- Upright Smartphone Mockup under Umbrella -->
+                            <div class="relative z-10 mt-16 w-[185px] sm:w-[205px] h-[295px] sm:h-[315px] rounded-[30px] bg-slate-900 p-2.5 shadow-2xl border-2 border-slate-700">
+                                <div class="w-full h-full rounded-[22px] bg-white overflow-hidden flex flex-col justify-between relative">
+                                    <!-- Phone Notch -->
+                                    <div class="w-20 h-4 bg-slate-900 rounded-b-xl mx-auto"></div>
+                                    
+                                    <!-- Phone Center Emblem -->
+                                    <div class="px-3 text-center my-auto">
+                                        <div class="w-14 h-14 mx-auto rounded-full bg-[#e6f4ec] border border-[#007A33]/30 flex items-center justify-center text-[#007A33] mb-2">
+                                            <svg class="w-8 h-8" viewBox="0 0 64 64" fill="none">
+                                                <path d="M36 14C27.5 14 21 20.8 21 29C21 37.2 27.5 44 36 44C31.5 42 28.5 36 28.5 29C28.5 22 31.5 16 36 14Z" fill="currentColor"/>
+                                                <polygon points="40,21 41.7,25 46,25.5 42.7,28.3 43.6,32.5 40,30.2 36.4,32.5 37.3,28.3 34,25.5 38.3,25" fill="#c68a12"/>
+                                            </svg>
+                                        </div>
+                                        <div class="text-base font-extrabold text-[#007A33] tracking-tight">e-KHIDMAT</div>
+                                        <div class="text-[9px] font-bold text-[#c68a12] uppercase tracking-wider">Citizen Document System</div>
+                                    </div>
+
+                                    <!-- Phone Bottom Lime/Green Wave -->
+                                    <div class="h-16 bg-gradient-to-tr from-[#65a30d] to-[#007A33] rounded-t-2xl flex items-center justify-center text-white text-[10px] font-bold tracking-wide">
+                                        INSTANT A4 PDF READY
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FLOATING SERVICE PILL 1 (Left): Domicile Form -->
+                            <button type="button" onclick="navigateTo('domicile')"
+                                class="animate-float-1 absolute left-0 sm:left-2 bottom-24 z-30 bg-white hover:bg-[#f0fdf4] border border-slate-200 hover:border-[#007A33] shadow-lg rounded-2xl px-4 py-2.5 flex items-center gap-2.5 cursor-pointer transition group">
+                                <span class="w-6 h-6 rounded-full bg-[#16a34a] text-white flex items-center justify-center text-xs font-bold shadow-xs">✓</span>
+                                <div class="text-right">
+                                    <span class="urdu-font block text-sm font-bold text-slate-900 leading-tight group-hover:text-[#007A33]">ڈومیسائل فارم</span>
+                                    <span class="block text-[10px] font-bold text-slate-500">Domicile Form</span>
+                                </div>
+                            </button>
+
+                            <!-- FLOATING SERVICE PILL 2 (Right): Tasdeeq Nama -->
+                            <button type="button" onclick="navigateTo('tasdeeq')"
+                                class="animate-float-2 absolute right-0 sm:right-1 bottom-28 z-30 bg-white hover:bg-[#f0fdf4] border border-slate-200 hover:border-[#007A33] shadow-lg rounded-2xl px-4 py-2.5 flex items-center gap-2.5 cursor-pointer transition group">
+                                <span class="w-6 h-6 rounded-full bg-[#16a34a] text-white flex items-center justify-center text-xs font-bold shadow-xs">✓</span>
+                                <div class="text-right">
+                                    <span class="urdu-font block text-sm font-bold text-slate-900 leading-tight group-hover:text-[#007A33]">تصدیق نامہ</span>
+                                    <span class="block text-[10px] font-bold text-slate-500">Urdu Attestation</span>
+                                </div>
+                            </button>
+
+                            <!-- FLOATING SERVICE PILL 3 (Bottom Center-Right): Form B Medical -->
+                            <button type="button" onclick="navigateTo('formb')"
+                                class="animate-float-3 absolute right-4 sm:right-8 bottom-6 z-30 bg-white hover:bg-[#f0fdf4] border border-slate-200 hover:border-[#007A33] shadow-lg rounded-2xl px-4 py-2.5 flex items-center gap-2.5 cursor-pointer transition group">
+                                <span class="w-6 h-6 rounded-full bg-[#16a34a] text-white flex items-center justify-center text-xs font-bold shadow-xs">✓</span>
+                                <div class="text-right">
+                                    <span class="urdu-font block text-sm font-bold text-slate-900 leading-tight group-hover:text-[#007A33]">میڈیکل فارم بی</span>
+                                    <span class="block text-[10px] font-bold text-slate-500">Form B + Photo</span>
+                                </div>
+                            </button>
+
+                        </div>
                     </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================
+             3 INTERACTIVE SERVICE CARDS SECTION
+             ================================================================= -->
+        <section id="select-forms" class="py-14 px-4 sm:px-6 bg-slate-50/70 border-b border-slate-200">
+            <div class="max-w-7xl mx-auto">
+                
+                <div class="text-center max-w-2xl mx-auto mb-10">
+                    <span class="inline-block px-3 py-1 rounded-full bg-[#e6f4ec] text-[#007A33] text-xs font-bold uppercase tracking-wider mb-2">
+                        Official Document Generators
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">
+                        Select a Form to Fill &amp; Download PDF
+                    </h2>
+                    <p class="text-sm sm:text-base text-slate-600 mt-2">
+                        Choose any official form below to open the live side-by-side A4 editor. All forms format automatically to exact print standards.
+                    </p>
                 </div>
 
-                <!-- Address -->
+                <!-- 3 Service Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                    
+                    <!-- CARD 1: Domicile Submission Form -->
+                    <div onclick="navigateTo('domicile')"
+                        class="bg-white rounded-2xl border-2 border-slate-200 hover:border-[#007A33] p-6 shadow-sm hover:shadow-xl transition-all duration-200 flex flex-col justify-between cursor-pointer group">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="px-3 py-1 rounded-full bg-[#e6f4ec] text-[#007A33] text-xs font-extrabold">FORM 01</span>
+                                <span class="w-9 h-9 rounded-xl bg-slate-100 group-hover:bg-[#007A33] group-hover:text-white text-slate-700 flex items-center justify-center font-bold transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                </span>
+                            </div>
+                            <h3 class="text-xl font-extrabold text-slate-900 group-hover:text-[#007A33] transition">
+                                Domicile Submission Form
+                            </h3>
+                            <p class="text-xs font-semibold text-[#c68a12] mt-0.5">
+                                District &amp; Tehsil Domicile Application
+                            </p>
+                            <p class="text-sm text-slate-600 mt-3 leading-relaxed">
+                                Official bordered submission table with auto-splitting 13-digit CNIC boxes, 11-digit Mobile boxes, and interactive 14-document checklist.
+                            </p>
+                            <ul class="mt-4 space-y-2 text-xs text-slate-700 font-medium">
+                                <li class="flex items-center gap-2"><span class="text-[#007A33] font-bold">✓</span> 15 Applicant Data Fields</li>
+                                <li class="flex items-center gap-2"><span class="text-[#007A33] font-bold">✓</span> Auto 13-Box CNIC &amp; 11-Box Mobile</li>
+                                <li class="flex items-center gap-2"><span class="text-[#007A33] font-bold">✓</span> 14-Item Document Attached Checkmarks</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100">
+                            <button type="button" class="w-full py-2.5 px-4 rounded-xl bg-[#007A33] group-hover:bg-[#005c26] text-white font-bold text-sm transition flex items-center justify-center gap-2 cursor-pointer">
+                                <span>Open &amp; Fill Form</span>
+                                <span>→</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- CARD 2: Tasdeeq Nama (Urdu) -->
+                    <div onclick="navigateTo('tasdeeq')"
+                        class="bg-white rounded-2xl border-2 border-slate-200 hover:border-[#007A33] p-6 shadow-sm hover:shadow-xl transition-all duration-200 flex flex-col justify-between cursor-pointer group">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="px-3 py-1 rounded-full bg-[#e6f4ec] text-[#007A33] text-xs font-extrabold">FORM 02 • URDU</span>
+                                <span class="w-9 h-9 rounded-xl bg-slate-100 group-hover:bg-[#007A33] group-hover:text-white text-slate-700 flex items-center justify-center font-bold transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="flex items-baseline justify-between gap-2">
+                                <h3 class="text-xl font-extrabold text-slate-900 group-hover:text-[#007A33] transition">
+                                    Tasdeeq Nama
+                                </h3>
+                                <span class="urdu-font text-lg font-bold text-[#007A33]">تصدیق نامہ</span>
+                            </div>
+                            <p class="text-xs font-semibold text-[#c68a12] mt-0.5">
+                                درخواست برائے حصول ڈومیسائل
+                            </p>
+                            <p class="text-sm text-slate-600 mt-3 leading-relaxed">
+                                Authentic Nastaliq Urdu verification certificate with inline Bank Challan number, challan date, 6 numbered attachments, and pen-ink toggle.
+                            </p>
+                            <ul class="mt-4 space-y-2 text-xs text-slate-700 font-medium">
+                                <li class="flex items-center gap-2"><span class="text-[#007A33] font-bold">✓</span> Authentic Noto Nastaliq Urdu Script</li>
+                                <li class="flex items-center gap-2"><span class="text-[#007A33] font-bold">✓</span> Bank Challan # &amp; Date Integration</li>
+                                <li class="flex items-center gap-2"><span class="text-[#007A33] font-bold">✓</span> Royal Blue Pen Ink / Black Ink Toggle</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100">
+                            <button type="button" class="w-full py-2.5 px-4 rounded-xl bg-[#007A33] group-hover:bg-[#005c26] text-white font-bold text-sm transition flex items-center justify-center gap-2 cursor-pointer">
+                                <span>Open &amp; Fill Urdu Form</span>
+                                <span>→</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- CARD 3: Form B (Medical Certificate) -->
+                    <div onclick="navigateTo('formb')"
+                        class="bg-white rounded-2xl border-2 border-slate-200 hover:border-[#007A33] p-6 shadow-sm hover:shadow-xl transition-all duration-200 flex flex-col justify-between cursor-pointer group">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="px-3 py-1 rounded-full bg-[#e6f4ec] text-[#007A33] text-xs font-extrabold">FORM 03 • MEDICAL</span>
+                                <span class="w-9 h-9 rounded-xl bg-slate-100 group-hover:bg-[#007A33] group-hover:text-white text-slate-700 flex items-center justify-center font-bold transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                </span>
+                            </div>
+                            <h3 class="text-xl font-extrabold text-slate-900 group-hover:text-[#007A33] transition">
+                                Form B — Medical Certificate
+                            </h3>
+                            <p class="text-xs font-semibold text-[#c68a12] mt-0.5">
+                                Section 7(3) &amp; Section (2) Driving License Medical
+                            </p>
+                            <p class="text-sm text-slate-600 mt-3 leading-relaxed">
+                                Complete medical fitness certificate with 15-cell Applicant &amp; Doctor CNIC grids, live Photograph Upload box, and 9 medical assessment fields.
+                            </p>
+                            <ul class="mt-4 space-y-2 text-xs text-slate-700 font-medium">
+                                <li class="flex items-center gap-2"><span class="text-[#007A33] font-bold">✓</span> Live Photo Upload + Fit Toggle</li>
+                                <li class="flex items-center gap-2"><span class="text-[#007A33] font-bold">✓</span> Applicant &amp; Doctor 15-Box CNIC Grids</li>
+                                <li class="flex items-center gap-2"><span class="text-[#007A33] font-bold">✓</span> Official Bottom Urdu Instruction Note</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100">
+                            <button type="button" class="w-full py-2.5 px-4 rounded-xl bg-[#007A33] group-hover:bg-[#005c26] text-white font-bold text-sm transition flex items-center justify-center gap-2 cursor-pointer">
+                                <span>Open &amp; Fill Form B</span>
+                                <span>→</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================
+             HOW IT WORKS STRIP
+             ================================================================= -->
+        <section id="how-it-works" class="py-12 px-4 sm:px-6 bg-white">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="flex items-start gap-4 p-4 rounded-2xl border border-slate-100 bg-slate-50/60">
+                        <div class="w-10 h-10 rounded-full bg-[#007A33] text-white font-extrabold flex items-center justify-center shrink-0">1</div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">Select Official Form</h4>
+                            <p class="text-xs text-slate-600 mt-1">Pick Domicile Form, Urdu Tasdeeq Nama, or Form B Medical Certificate from the portal.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-2xl border border-slate-100 bg-slate-50/60">
+                        <div class="w-10 h-10 rounded-full bg-[#007A33] text-white font-extrabold flex items-center justify-center shrink-0">2</div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">Enter Details with Live Preview</h4>
+                            <p class="text-xs text-slate-600 mt-1">Type in the clean left panel and see every digit, checkmark, and photo appear live on A4 paper.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-2xl border border-slate-100 bg-slate-50/60">
+                        <div class="w-10 h-10 rounded-full bg-[#c68a12] text-white font-extrabold flex items-center justify-center shrink-0">3</div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">Download Print-Ready A4 PDF</h4>
+                            <p class="text-xs text-slate-600 mt-1">Click Download PDF to save a crisp, exact-dimension single-page A4 document ready for submission.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-slate-900 text-slate-300 py-6 px-4 text-center text-xs">
+            <p class="font-semibold text-white">e-Khidmat One-Window Citizen Form Portal — Mandi Bahauddin, Punjab</p>
+            <p class="text-slate-400 mt-1">Instant Online Filling &amp; A4 PDF Generation for Domicile, Tasdeeq Nama &amp; Form B</p>
+        </footer>
+    </div>
+
+    <!-- =====================================================================
+         VIEW 2: FORM 1 WORKSPACE (DOMICILE SUBMISSION FORM)
+         ===================================================================== -->
+    <div id="view-domicile" class="hidden min-h-screen flex-col lg:flex-row">
+        
+        <!-- Left Input Sidebar -->
+        <aside class="no-print w-full lg:w-[440px] xl:w-[470px] lg:h-[calc(100vh-100px)] lg:sticky lg:top-[100px] bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col z-20">
+            <div class="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+                <button type="button" onclick="navigateTo('home')" class="text-xs font-bold text-[#007A33] hover:underline flex items-center gap-1 cursor-pointer">
+                    <span>← Back to Portal Home</span>
+                </button>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="fillDomicileSample()" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#e6f4ec] text-[#007A33] hover:bg-[#d1ebd9] transition cursor-pointer">
+                        Sample Data
+                    </button>
+                    <button type="button" onclick="clearDomicileForm()" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 transition cursor-pointer">
+                        Clear
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-5 space-y-3.5">
                 <div>
-                    <label for="inAddress" class="modern-label">Address</label>
-                    <input type="text" id="inAddress" class="modern-input" placeholder="e.g. PO KHAS CHACK NO 38 , TEHSIL & DISTRICT MANDI BAHAUDDIN" oninput="syncForm()">
+                    <label for="domFullName" class="modern-label">Full Name</label>
+                    <input type="text" id="domFullName" class="modern-input" placeholder="e.g. HAFIZ MUAZ SAQIB" oninput="syncDomicile()">
                 </div>
 
-                <!-- Place & Tehsil -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div>
-                        <label for="inPlace" class="modern-label">Place</label>
-                        <input type="text" id="inPlace" class="modern-input" placeholder="e.g. MANDI BAHAUDDIN" oninput="syncForm()">
-                    </div>
-                    <div>
-                        <label for="inTehsil" class="modern-label">Tehsil</label>
-                        <input type="text" id="inTehsil" class="modern-input" placeholder="e.g. MANDI BAHAUDDIN" oninput="syncForm()">
-                    </div>
+                <div>
+                    <label for="domFatherName" class="modern-label">Father / Husband Name</label>
+                    <input type="text" id="domFatherName" class="modern-input" placeholder="e.g. SAQIB HUSSAIN JANJUA" oninput="syncDomicile()">
                 </div>
 
-                <!-- Date of Arrival & Date of Birth -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <!-- Clean Mobile & CNIC Inputs (NO Telecom Network Dropdown) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label for="inDateArrival" class="modern-label">Date of Arrival</label>
-                        <input type="text" id="inDateArrival" class="modern-input" placeholder="e.g. 29-07-2008" oninput="syncForm()">
+                        <label for="domMobile" class="modern-label">Mobile Number</label>
+                        <input type="text" id="domMobile" inputmode="numeric" maxlength="12" class="modern-input tracking-wider font-medium" placeholder="03xx-xxxxxxx" oninput="handleDomMobile(this)">
+                        <p class="helper-text">11 digits (e.g. 0302-7747032)</p>
                     </div>
                     <div>
-                        <label for="inDob" class="modern-label">Date of Birth</label>
-                        <input type="text" id="inDob" class="modern-input" placeholder="e.g. 29-07-2008" oninput="syncForm()">
+                        <label for="domCnic" class="modern-label">CNIC Number</label>
+                        <input type="text" id="domCnic" inputmode="numeric" maxlength="15" class="modern-input tracking-wider font-medium" placeholder="_____-_______-_" oninput="handleDomCnic(this)">
+                        <p class="helper-text">13 digits (XXXXX-XXXXXXX-X)</p>
                     </div>
                 </div>
 
-                <!-- Occupation & Mark of Identification -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                    <label for="domAddress" class="modern-label">Address</label>
+                    <input type="text" id="domAddress" class="modern-input" placeholder="PO KHAS CHACK NO 38 , TEHSIL & DISTRICT MANDI BAHAUDDIN" oninput="syncDomicile()">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label for="inOccupation" class="modern-label">Occupation</label>
-                        <input type="text" id="inOccupation" class="modern-input" placeholder="e.g. STUDENT" oninput="syncForm()">
+                        <label for="domPlace" class="modern-label">Place</label>
+                        <input type="text" id="domPlace" class="modern-input" placeholder="MANDI BAHAUDDIN" oninput="syncDomicile()">
                     </div>
                     <div>
-                        <label for="inMarkId" class="modern-label">Mark of Identification</label>
-                        <input type="text" id="inMarkId" class="modern-input" placeholder="e.g. NIL" oninput="syncForm()">
+                        <label for="domTehsil" class="modern-label">Tehsil</label>
+                        <input type="text" id="domTehsil" class="modern-input" placeholder="MANDI BAHAUDDIN" oninput="syncDomicile()">
                     </div>
                 </div>
 
-                <!-- NIC Holder & Marital Status -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label for="inNicHolder" class="modern-label">NIC Holder</label>
-                        <input type="text" id="inNicHolder" class="modern-input" placeholder="e.g. SELF / FATHER" oninput="syncForm()">
+                        <label for="domArrival" class="modern-label">Date of Arrival</label>
+                        <input type="text" id="domArrival" class="modern-input" placeholder="29-07-2008" oninput="syncDomicile()">
                     </div>
                     <div>
-                        <label for="inMarital" class="modern-label">Marital Status</label>
-                        <select id="inMarital" class="modern-input cursor-pointer" onchange="syncForm()">
-                            <option value="">Select Status</option>
+                        <label for="domDob" class="modern-label">Date of Birth</label>
+                        <input type="text" id="domDob" class="modern-input" placeholder="29-07-2008" oninput="syncDomicile()">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="domOccupation" class="modern-label">Occupation</label>
+                        <input type="text" id="domOccupation" class="modern-input" placeholder="STUDENT" oninput="syncDomicile()">
+                    </div>
+                    <div>
+                        <label for="domMarkId" class="modern-label">Mark of Identification</label>
+                        <input type="text" id="domMarkId" class="modern-input" placeholder="NIL" oninput="syncDomicile()">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="domNicHolder" class="modern-label">NIC Holder</label>
+                        <input type="text" id="domNicHolder" class="modern-input" placeholder="SELF / FATHER" oninput="syncDomicile()">
+                    </div>
+                    <div>
+                        <label for="domMarital" class="modern-label">Marital Status</label>
+                        <select id="domMarital" class="modern-input cursor-pointer" onchange="syncDomicile()">
+                            <option value="">Select</option>
                             <option value="NO">NO (Unmarried)</option>
                             <option value="YES">YES (Married)</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- Spouse Name & Remarks -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label for="inSpouse" class="modern-label">Spouse Name</label>
-                        <input type="text" id="inSpouse" class="modern-input" placeholder="If married" oninput="syncForm()">
+                        <label for="domSpouse" class="modern-label">Spouse Name</label>
+                        <input type="text" id="domSpouse" class="modern-input" placeholder="Optional" oninput="syncDomicile()">
                     </div>
                     <div>
-                        <label for="inRemarks" class="modern-label">Remarks</label>
-                        <input type="text" id="inRemarks" class="modern-input" placeholder="Optional notes" oninput="syncForm()">
+                        <label for="domRemarks" class="modern-label">Remarks</label>
+                        <input type="text" id="domRemarks" class="modern-input" placeholder="Optional" oninput="syncDomicile()">
                     </div>
                 </div>
 
-                <!-- Document Attached Checkboxes -->
-                <div class="pt-2">
-                    <div class="flex items-center justify-between mb-2.5">
-                        <span class="modern-label mb-0">Document Attached</span>
-                        <span class="text-[11px] text-slate-500">Select attached files</span>
+                <!-- 14 Document Attached Checkboxes -->
+                <div class="pt-1">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="modern-label mb-0">Document Attached (14 Items)</span>
+                        <span class="text-[11px] text-slate-500">Toggle checkmarks</span>
                     </div>
-                    <div id="docCheckboxGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-white p-3.5 rounded-xl border border-slate-200">
-                        <!-- Dynamically populated 14 checkboxes -->
-                    </div>
+                    <div id="domDocCheckboxes" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 bg-slate-50 p-3 rounded-xl border border-slate-200"></div>
                 </div>
-
             </div>
         </aside>
 
-        <!-- =========================================================
-             RIGHT PANEL: Live A4 Document Preview + Download PDF
-             ========================================================= -->
+        <!-- Right A4 Live Preview -->
         <section class="flex-1 flex flex-col bg-slate-200/80 min-w-0">
-            
-            <!-- Sticky Top Action Bar -->
-            <header class="no-print sticky top-0 z-10 bg-white/95 backdrop-blur border-b border-slate-300 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 shadow-sm">
-                <div class="flex items-center gap-2.5">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        Live Form Preview
-                    </span>
-                    <span class="text-xs text-slate-500 hidden md:inline">A4 Official Print Layout</span>
-                </div>
-
+            <div class="no-print bg-white border-b border-slate-300 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-2">
-                    <button type="button" onclick="fillSampleData()"
-                        class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 transition cursor-pointer">
-                        Fill Sample Data
-                    </button>
-                    <button type="button" onclick="window.print()"
-                        class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-sky-600 hover:bg-sky-500 text-white transition cursor-pointer hidden sm:inline-flex items-center gap-1.5">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
-                        </svg>
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-[#e6f4ec] text-[#007A33]">
+                        Domicile Submission Form — Live A4 Preview
+                    </span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="window.print()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white cursor-pointer hidden sm:inline-flex items-center gap-1.5">
                         Print
                     </button>
-                    <button type="button" id="downloadPdfBtn" onclick="downloadPDF()"
-                        class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition cursor-pointer inline-flex items-center gap-1.5">
+                    <button type="button" onclick="exportSheetPDF('sheet-domicile', 'Domicile_Submission_Form', this)"
+                        class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-[#007A33] hover:bg-[#005c26] text-white shadow-sm cursor-pointer inline-flex items-center gap-1.5">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                         </svg>
                         <span>Download PDF</span>
                     </button>
                 </div>
-            </header>
+            </div>
 
-            <!-- Scrollable A4 Sheet Viewport -->
             <div class="preview-pane flex-1 overflow-auto p-4 sm:p-6 lg:p-8 flex justify-center items-start">
-                <main id="domicileFormSheet" class="a4-sheet">
-                    
-                    <!-- Section 1 Heading -->
+                <main id="sheet-domicile" class="a4-sheet">
                     <div class="form-heading">DOMICILE SUBMISSION FORM:</div>
 
-                    <!-- Main Applicant Information Table -->
-                    <table class="official-table" aria-label="Domicile Submission Form">
+                    <table class="official-table">
                         <tbody>
-                            <!-- Row 1: Full Name -->
                             <tr>
                                 <td class="label-cell">Full Name:</td>
-                                <td class="value-cell" id="outFullName"></td>
+                                <td class="value-cell" id="outDomFullName"></td>
                             </tr>
-
-                            <!-- Row 2: Father / Husband Name -->
                             <tr>
                                 <td class="label-cell">Father / Husband Name:</td>
-                                <td class="value-cell" id="outFatherName"></td>
+                                <td class="value-cell" id="outDomFatherName"></td>
                             </tr>
-
-                            <!-- Row 3: Address -->
                             <tr>
                                 <td class="label-cell">Address:</td>
-                                <td class="value-cell" id="outAddress"></td>
+                                <td class="value-cell" id="outDomAddress"></td>
                             </tr>
-
-                            <!-- Row 4: Place -->
                             <tr>
                                 <td class="label-cell">Place:</td>
-                                <td class="value-cell" id="outPlace"></td>
+                                <td class="value-cell" id="outDomPlace"></td>
                             </tr>
-
-                            <!-- Row 5: Tehsil (with vertical divider around midpoint matching image_eefb3f.png) -->
                             <tr>
                                 <td class="label-cell">Tehsil:</td>
                                 <td class="value-cell-flush">
                                     <div class="split-cell-wrapper">
-                                        <div id="outTehsil" class="split-cell-part" style="width: 34.5%; border-right: 1px solid #000000;"></div>
+                                        <div id="outDomTehsil" class="split-cell-part" style="width: 34.5%; border-right: 1px solid #000000;"></div>
                                         <div class="split-cell-part" style="width: 65.5%;"></div>
                                     </div>
                                 </td>
                             </tr>
-
-                            <!-- Row 6: Date of Arrival -->
                             <tr>
                                 <td class="label-cell">Date of Arrival:</td>
-                                <td class="value-cell" id="outDateArrival"></td>
+                                <td class="value-cell" id="outDomArrival"></td>
                             </tr>
-
-                            <!-- Row 7: Occupation -->
                             <tr>
                                 <td class="label-cell">Occupation:</td>
-                                <td class="value-cell" id="outOccupation"></td>
+                                <td class="value-cell" id="outDomOccupation"></td>
                             </tr>
-
-                            <!-- Row 8: Date of Birth (Exact spelling from image_eefb3f.png) -->
                             <tr>
                                 <td class="label-cell">Date of Brith:</td>
-                                <td class="value-cell" id="outDob"></td>
+                                <td class="value-cell" id="outDomDob"></td>
                             </tr>
-
-                            <!-- Row 9: Mark of Identification (Exact spelling from image_eefb3f.png) -->
                             <tr>
                                 <td class="label-cell">Mark of Identifcation:</td>
-                                <td class="value-cell" id="outMarkId"></td>
+                                <td class="value-cell" id="outDomMarkId"></td>
                             </tr>
-
-                            <!-- Row 10: NIC Holder -->
                             <tr>
                                 <td class="label-cell">NIC Holder:</td>
-                                <td class="value-cell" id="outNicHolder"></td>
+                                <td class="value-cell" id="outDomNicHolder"></td>
                             </tr>
-
-                            <!-- Row 11: NIC Number (13 individual bordered boxes) -->
                             <tr>
                                 <td class="label-cell" style="height: 27px;">NIC Number:</td>
                                 <td class="value-cell-flush" style="height: 27px;">
-                                    <div class="digit-grid-13" id="outNicGrid">
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
+                                    <div class="digit-grid-13" id="outDomNicGrid">
+                                        <div class="digit-box"></div><div class="digit-box"></div><div class="digit-box"></div><div class="digit-box"></div><div class="digit-box"></div>
+                                        <div class="digit-box"></div><div class="digit-box"></div><div class="digit-box"></div><div class="digit-box"></div><div class="digit-box"></div>
+                                        <div class="digit-box"></div><div class="digit-box"></div><div class="digit-box"></div>
                                     </div>
                                 </td>
                             </tr>
-
-                            <!-- Row 12: Marital Status (Right-aligned box displaying YES / NO matching image_eefb3f.png) -->
                             <tr>
                                 <td class="label-cell">Marital Status:</td>
                                 <td class="value-cell-flush">
                                     <div class="split-cell-wrapper">
                                         <div class="split-cell-part" style="width: 64.5%; border-right: 1px solid #000000;"></div>
-                                        <div id="outMarital" class="split-cell-part" style="width: 35.5%;"></div>
+                                        <div id="outDomMarital" class="split-cell-part" style="width: 35.5%;"></div>
                                     </div>
                                 </td>
                             </tr>
-
-                            <!-- Row 13: Spouse Name -->
                             <tr>
                                 <td class="label-cell">Spouse Name:</td>
-                                <td class="value-cell" id="outSpouse"></td>
+                                <td class="value-cell" id="outDomSpouse"></td>
                             </tr>
-
-                            <!-- Row 14: Remarks -->
                             <tr>
                                 <td class="label-cell">Remarks:</td>
-                                <td class="value-cell" id="outRemarks"></td>
+                                <td class="value-cell" id="outDomRemarks"></td>
                             </tr>
-
-                            <!-- Row 15: Mobile Number (11 individual bordered boxes) -->
                             <tr>
                                 <td class="label-cell" style="height: 27px;">Mobile Number:</td>
                                 <td class="value-cell-flush" style="height: 27px;">
-                                    <div class="digit-grid-11" id="outMobileGrid">
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
-                                        <div class="digit-box"></div>
+                                    <div class="digit-grid-11" id="outDomMobileGrid">
+                                        <div class="digit-box"></div><div class="digit-box"></div><div class="digit-box"></div><div class="digit-box"></div>
+                                        <div class="digit-box"></div><div class="digit-box"></div><div class="digit-box"></div><div class="digit-box"></div>
+                                        <div class="digit-box"></div><div class="digit-box"></div><div class="digit-box"></div>
                                     </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
 
-                    <!-- Section 2 Heading -->
                     <div class="doc-heading">DOCUMENT ATTACHED:</div>
 
-                    <!-- Document Attached Checklist Table (14 exact items from image_eefb3f.png) -->
-                    <table class="doc-table" aria-label="Document Attached Checklist">
-                        <tbody id="outDocTableBody">
-                            <!-- Dynamically populated 14 rows -->
-                        </tbody>
+                    <table class="doc-table">
+                        <tbody id="outDomDocBody"></tbody>
                     </table>
+                </main>
+            </div>
+        </section>
+    </div>
+
+    <!-- =====================================================================
+         VIEW 3: FORM 2 WORKSPACE (تصدیق نامہ - URDU TASDEEQ NAMA)
+         ===================================================================== -->
+    <div id="view-tasdeeq" class="hidden min-h-screen flex-col lg:flex-row">
+        
+        <!-- Left Input Sidebar -->
+        <aside class="no-print w-full lg:w-[440px] xl:w-[470px] lg:h-[calc(100vh-100px)] lg:sticky lg:top-[100px] bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col z-20">
+            <div class="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+                <button type="button" onclick="navigateTo('home')" class="text-xs font-bold text-[#007A33] hover:underline flex items-center gap-1 cursor-pointer">
+                    <span>← Back to Portal Home</span>
+                </button>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="fillTasdeeqSample()" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#e6f4ec] text-[#007A33] hover:bg-[#d1ebd9] transition cursor-pointer">
+                        Sample Urdu
+                    </button>
+                    <button type="button" onclick="clearTasdeeqForm()" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 transition cursor-pointer">
+                        Clear
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-5 space-y-4">
+                <!-- Ink Color Toggle -->
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-800">Handwritten Fill Ink Style</span>
+                    <div class="flex items-center gap-1.5">
+                        <button type="button" id="inkBtnBlue" onclick="setTasdeeqInk('blue')" class="px-3 py-1 rounded-lg text-xs font-bold bg-[#1a35b8] text-white cursor-pointer">
+                            Royal Blue Ink
+                        </button>
+                        <button type="button" id="inkBtnBlack" onclick="setTasdeeqInk('black')" class="px-3 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 border border-slate-300 cursor-pointer">
+                            Black Ink
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="tasApplicantName" class="modern-label">Applicant Name (مسماۃ / مسمی)</label>
+                    <input type="text" id="tasApplicantName" dir="rtl" class="modern-input urdu-font text-right" placeholder="حافظ معاذ ثاقب" oninput="syncTasdeeq()">
+                </div>
+
+                <div>
+                    <label for="tasFatherName" class="modern-label">Father / Husband Name (ولد / زوجہ)</label>
+                    <input type="text" id="tasFatherName" dir="rtl" class="modern-input urdu-font text-right" placeholder="ثاقب حسین جنجوعہ" oninput="syncTasdeeq()">
+                </div>
+
+                <div>
+                    <label for="tasAddress" class="modern-label">Complete Residence Address (ساکن)</label>
+                    <input type="text" id="tasAddress" dir="rtl" class="modern-input urdu-font text-right" placeholder="ڈاکخانہ خاص چک نمبر 38 تحصیل و ضلع منڈی بہاؤالدین" oninput="syncTasdeeq()">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="tasChallanNo" class="modern-label">Bank Challan Number (چالان نمبر)</label>
+                        <input type="text" id="tasChallanNo" class="modern-input font-semibold" placeholder="#558738498751" oninput="syncTasdeeq()">
+                    </div>
+                    <div>
+                        <label for="tasChallanDate" class="modern-label">Challan Date (مورخہ)</label>
+                        <input type="text" id="tasChallanDate" class="modern-input font-semibold" placeholder="16-11-2026" oninput="syncTasdeeq()">
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Right A4 Live Preview -->
+        <section class="flex-1 flex flex-col bg-slate-200/80 min-w-0">
+            <div class="no-print bg-white border-b border-slate-300 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-[#e6f4ec] text-[#007A33]">
+                        تصدیق نامہ (Tasdeeq Nama) — Live A4 Preview
+                    </span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="window.print()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white cursor-pointer hidden sm:inline-flex">
+                        Print
+                    </button>
+                    <button type="button" onclick="exportSheetPDF('sheet-tasdeeq', 'Tasdeeq_Nama_Domicile', this)"
+                        class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-[#007A33] hover:bg-[#005c26] text-white shadow-sm cursor-pointer inline-flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        <span>Download PDF</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="preview-pane flex-1 overflow-auto p-4 sm:p-6 lg:p-8 flex justify-center items-start">
+                <main id="sheet-tasdeeq" class="a4-sheet tasdeeq-sheet">
+                    
+                    <!-- Ornate Header matching image_eda581.png -->
+                    <div class="text-center mb-8 mt-2">
+                        <div class="inline-block text-4xl font-extrabold tracking-wide text-black">
+                            &#1757; تصدیق نامہ &#1758;
+                        </div>
+                    </div>
+
+                    <!-- Subject Line -->
+                    <div class="flex items-center justify-between mb-6 text-lg font-bold">
+                        <div>عنوان:-</div>
+                        <div class="mx-auto border-b-2 border-black pb-1 px-4">
+                            درخواست برائے حصول ڈومیسائل
+                        </div>
+                        <div class="w-12"></div>
+                    </div>
+
+                    <!-- Applicant Details Paragraph -->
+                    <div class="space-y-3 text-base">
+                        <div class="flex flex-wrap items-baseline gap-4">
+                            <span class="font-bold">مسماۃ / مسمی</span>
+                            <span id="outTasName" class="tasdeeq-ink-blue font-bold px-3 min-w-[180px] text-center">حافظ معاذ ثاقب</span>
+                            <span class="font-bold">ولد</span>
+                            <span id="outTasFather" class="tasdeeq-ink-blue font-bold px-3 min-w-[180px] text-center">ثاقب حسین جنجوعہ</span>
+                        </div>
+
+                        <div class="flex flex-wrap items-baseline gap-3">
+                            <span class="font-bold">ساکن:</span>
+                            <span id="outTasAddress" class="tasdeeq-ink-blue font-bold">ڈاکخانہ خاص چک نمبر 38 تحصیل و ضلع منڈی بہاؤالدین</span>
+                        </div>
+
+                        <p class="text-[14.5px]">
+                            نے مجوزہ فارم درخواست حصول سرٹیفیکیٹ ڈومیسائل گزاری ہے۔
+                        </p>
+
+                        <p class="text-[14.5px]">
+                            سائل نے اپنی رہائش کی تصدیق تحصیلدار منڈی بہاؤالدین سے کروائی ہے اور بطور ثبوت مندرجہ ذیل دستاویزات منسلک کئے ہیں۔
+                        </p>
+                    </div>
+
+                    <!-- Numbered List 1 to 6 matching image_eda581.png -->
+                    <div class="mt-6 pr-8 space-y-2.5 text-[15px]">
+                        <div class="flex items-baseline gap-3">
+                            <span class="font-bold">-1</span>
+                            <span>کورٹ فیس مبلغ 20 روپے</span>
+                        </div>
+
+                        <div class="flex flex-wrap items-baseline gap-2">
+                            <span class="font-bold">-2</span>
+                            <span>بنک چالان مبلغ 250 روپے بروئے چالان نمبری</span>
+                            <span id="outTasChallanNo" dir="ltr" class="tasdeeq-ink-blue font-sans font-bold text-sm border-b border-black px-3">#558738498751</span>
+                            <span>مورخہ</span>
+                            <span id="outTasChallanDate" dir="ltr" class="tasdeeq-ink-blue font-sans font-bold text-sm px-2">16-11-2026</span>
+                        </div>
+
+                        <div class="flex items-baseline gap-3">
+                            <span class="font-bold">-3</span>
+                            <span>تعلیمی سرٹیفیکیٹ</span>
+                        </div>
+
+                        <div class="flex items-baseline gap-3">
+                            <span class="font-bold">-4</span>
+                            <span>( شناختی کارڈ ذاتی ۔ والد ۔ والدہ ۔ (خاوند</span>
+                        </div>
+
+                        <div class="flex items-baseline gap-3">
+                            <span class="font-bold">-5</span>
+                            <span>( ثبوت ملکیت ووٹر لسٹ ۔ بل بجلی بل ٹیلیفون بل سوئی گیس نقل پیدائش ۔ ( نکاح نامہ</span>
+                        </div>
+
+                        <div class="flex items-baseline gap-3">
+                            <span class="font-bold">-6</span>
+                            <span>تصدیق شدہ بیان حلفی از ایں اوتھ کمشنر پھالیہ / ملکوال / منڈی بہاؤالدین۔</span>
+                        </div>
+                    </div>
+
+                    <!-- Concluding Paragraph -->
+                    <p class="mt-6 text-[14.5px]">
+                        لہذا درخواست دہندہ کی سکونت مستقل ثابت ہوتی ہے۔ اور ڈومیسائل کا اہل ہے اگر رائے عالی ہو تو لف شدہ سرٹیفیکیٹ دستخط فرمایا جائے۔
+                    </p>
+
+                    <!-- Signature Footer matching image_eda581.png -->
+                    <div class="mt-24 pt-6 flex items-center justify-between px-8 text-base font-bold">
+                        <div class="border-b-2 border-black pb-1 px-4">آفیسر انچارج</div>
+                        <div class="border-b-2 border-black pb-1 px-4">ڈومیسائل کلرک</div>
+                    </div>
 
                 </main>
             </div>
         </section>
-
     </div>
 
+    <!-- =====================================================================
+         VIEW 4: FORM 3 WORKSPACE (FORM B - MEDICAL CERTIFICATE + PHOTO)
+         ===================================================================== -->
+    <div id="view-formb" class="hidden min-h-screen flex-col lg:flex-row">
+        
+        <!-- Left Input Sidebar -->
+        <aside class="no-print w-full lg:w-[440px] xl:w-[470px] lg:h-[calc(100vh-100px)] lg:sticky lg:top-[100px] bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col z-20">
+            <div class="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+                <button type="button" onclick="navigateTo('home')" class="text-xs font-bold text-[#007A33] hover:underline flex items-center gap-1 cursor-pointer">
+                    <span>← Back to Portal Home</span>
+                </button>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="fillFormBSample()" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#e6f4ec] text-[#007A33] hover:bg-[#d1ebd9] transition cursor-pointer">
+                        Sample Data
+                    </button>
+                    <button type="button" onclick="clearFormB()" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 transition cursor-pointer">
+                        Clear
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-5 space-y-3.5">
+                <!-- Photograph Upload Card -->
+                <div class="p-3.5 rounded-xl bg-[#f0fdf4] border border-[#007A33]/30 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-extrabold text-[#007A33] uppercase">Applicant Photograph</span>
+                        <div class="flex items-center gap-1">
+                            <button type="button" onclick="setPhotoFit('cover')" id="fitCoverBtn" class="px-2 py-0.5 rounded text-[11px] font-bold bg-[#007A33] text-white cursor-pointer">Cover</button>
+                            <button type="button" onclick="setPhotoFit('contain')" id="fitContainBtn" class="px-2 py-0.5 rounded text-[11px] font-bold bg-white text-slate-700 border border-slate-300 cursor-pointer">Contain</button>
+                            <button type="button" onclick="removeFormBPhoto()" class="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-50 text-rose-600 border border-rose-200 cursor-pointer">Remove</button>
+                        </div>
+                    </div>
+                    <input type="file" id="fbPhotoInput" accept="image/*" onchange="handleFormBPhotoUpload(this)"
+                        class="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#007A33] file:text-white hover:file:bg-[#005c26] cursor-pointer">
+                </div>
+
+                <div>
+                    <label for="fbAppCnic" class="modern-label">Applicant National Identity Card No.</label>
+                    <input type="text" id="fbAppCnic" inputmode="numeric" maxlength="15" class="modern-input font-medium tracking-wider" placeholder="_____-_______-_" oninput="handleFormBCnic(this, 'outFbAppCnicGrid')">
+                </div>
+
+                <div>
+                    <label for="fbAppName" class="modern-label">Applicant Full Name (for Certification)</label>
+                    <input type="text" id="fbAppName" class="modern-input" placeholder="e.g. HAFIZ MUAZ SAQIB" oninput="syncFormB()">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="fbQ1" class="modern-label">1. Apparent Age</label>
+                        <input type="text" id="fbQ1" class="modern-input" placeholder="e.g. 18 YEARS" oninput="syncFormB()">
+                    </div>
+                    <div>
+                        <label for="fbQ9" class="modern-label">9. Blood Group</label>
+                        <input type="text" id="fbQ9" class="modern-input" placeholder="e.g. B+" oninput="syncFormB()">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="fbQ2" class="modern-label">2. Epilepsy / Vertigo</label>
+                        <input type="text" id="fbQ2" class="modern-input" placeholder="NO" oninput="syncFormB()">
+                    </div>
+                    <div>
+                        <label for="fbQ3" class="modern-label">3. Heart / Lung Disorder</label>
+                        <input type="text" id="fbQ3" class="modern-input" placeholder="NO" oninput="syncFormB()">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="fbQ4" class="modern-label">4. Sightedness / Hearing</label>
+                        <input type="text" id="fbQ4" class="modern-input" placeholder="NORMAL" oninput="syncFormB()">
+                    </div>
+                    <div>
+                        <label for="fbQ5" class="modern-label">5. Deformity / Loss</label>
+                        <input type="text" id="fbQ5" class="modern-input" placeholder="NO" oninput="syncFormB()">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="fbQ6" class="modern-label">6. Alcohol / Drugs</label>
+                        <input type="text" id="fbQ6" class="modern-input" placeholder="NO" oninput="syncFormB()">
+                    </div>
+                    <div>
+                        <label for="fbQ7" class="modern-label">7. Generally Fit (Health/Eye)</label>
+                        <input type="text" id="fbQ7" class="modern-input" placeholder="FIT" oninput="syncFormB()">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="fbQ8" class="modern-label">8. Marks of Identification</label>
+                    <input type="text" id="fbQ8" class="modern-input" placeholder="NIL" oninput="syncFormB()">
+                </div>
+
+                <hr class="border-slate-200 my-2">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="fbDocName" class="modern-label">Doctor Name</label>
+                        <input type="text" id="fbDocName" class="modern-input" placeholder="DR. MUHAMMAD ALI" oninput="syncFormB()">
+                    </div>
+                    <div>
+                        <label for="fbRmpNo" class="modern-label">R.M.P No.</label>
+                        <input type="text" id="fbRmpNo" class="modern-input" placeholder="12345-P" oninput="syncFormB()">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="fbDocCnic" class="modern-label">Doctor's CNIC No.</label>
+                        <input type="text" id="fbDocCnic" inputmode="numeric" maxlength="15" class="modern-input font-medium tracking-wider" placeholder="_____-_______-_" oninput="handleFormBCnic(this, 'outFbDocCnicGrid')">
+                    </div>
+                    <div>
+                        <label for="fbDate" class="modern-label">Date</label>
+                        <input type="text" id="fbDate" class="modern-input" placeholder="16-11-2026" oninput="syncFormB()">
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Right A4 Live Preview -->
+        <section class="flex-1 flex flex-col bg-slate-200/80 min-w-0">
+            <div class="no-print bg-white border-b border-slate-300 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-[#e6f4ec] text-[#007A33]">
+                        Form B (Medical Certificate) — Live A4 Preview
+                    </span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="window.print()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white cursor-pointer hidden sm:inline-flex">
+                        Print
+                    </button>
+                    <button type="button" onclick="exportSheetPDF('sheet-formb', 'Form_B_Medical_Certificate', this)"
+                        class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-[#007A33] hover:bg-[#005c26] text-white shadow-sm cursor-pointer inline-flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        <span>Download PDF</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="preview-pane flex-1 overflow-auto p-4 sm:p-6 lg:p-8 flex justify-center items-start">
+                <main id="sheet-formb" class="a4-sheet formb-sheet">
+                    
+                    <!-- Top Centered Headers matching image_ed21a3.png -->
+                    <div class="text-center">
+                        <h1 class="text-2xl font-extrabold tracking-wide uppercase">FORM B</h1>
+                        <div class="text-xs font-bold mt-1">(SEE SECTION 7(3) AND SECTION (2))</div>
+                        <div class="text-sm font-extrabold mt-0.5">NATIONAL IDENTITY CARD NUMBER</div>
+
+                        <!-- 15-cell CNIC Box Grid (5 - 7 - 1) -->
+                        <div class="max-w-[440px] mx-auto mt-2">
+                            <div class="formb-cnic-grid" id="outFbAppCnicGrid">
+                                <div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div>
+                                <div class="formb-cnic-cell">—</div>
+                                <div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div>
+                                <div class="formb-cnic-cell">—</div>
+                                <div class="formb-cnic-cell"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Intro Paragraph -->
+                    <div class="mt-4 text-[12px] font-bold leading-snug">
+                        Form of Medical Certificate in respect of application for a license to drive any transport vehicle or to drive any vehicle as paid employee or otherviews:
+                    </div>
+                    <div class="mt-2.5 text-[12px] font-extrabold uppercase">
+                        TO BE FILLED IN BY A REGISTERED MEDICAL PRACTITIONER
+                    </div>
+
+                    <!-- 9 Numbered Questions matching image_ed21a3.png -->
+                    <div class="mt-3 space-y-2 text-[11.5px]">
+                        <div class="grid grid-cols-12 gap-3 items-end">
+                            <div class="col-span-7 font-bold flex gap-2"><span>1.</span><span>What is apparent age of the applicant?</span></div>
+                            <div class="col-span-5 formb-line uppercase" id="outFbQ1"></div>
+                        </div>
+
+                        <div class="grid grid-cols-12 gap-3 items-end">
+                            <div class="col-span-7 font-bold flex gap-2"><span>2.</span><span>Is the applicant; to best of yourjudgment subjected to epilepsy, vertigo, chronic ill-health likely to effect his/her efficiency?</span></div>
+                            <div class="col-span-5 formb-line uppercase" id="outFbQ2"></div>
+                        </div>
+
+                        <div class="grid grid-cols-12 gap-3 items-end">
+                            <div class="col-span-7 font-bold flex gap-2"><span>3.</span><span>Does the applicant suffer from any heart or lung disorder which might effect the performance of his/her duties as a driver?</span></div>
+                            <div class="col-span-5 formb-line uppercase" id="outFbQ3"></div>
+                        </div>
+
+                        <div class="grid grid-cols-12 gap-3 items-end">
+                            <div class="col-span-7 font-bold flex gap-2"><span>4.</span><span>(A) Is there any defect of sightedness, if so, has it been corrected by using suitable spectacles?<br>(B) Does the applicant suffer from a degree of deafness which would prevent his/her hearing of ordinary sound signals?</span></div>
+                            <div class="col-span-5 formb-line uppercase" id="outFbQ4"></div>
+                        </div>
+
+                        <div class="grid grid-cols-12 gap-3 items-end">
+                            <div class="col-span-7 font-bold flex gap-2"><span>5.</span><span>Does the applicant has any deformity or loss of members, Which effects the performance of his/her duties as a driver?</span></div>
+                            <div class="col-span-5 formb-line uppercase" id="outFbQ5"></div>
+                        </div>
+
+                        <div class="grid grid-cols-12 gap-3 items-end">
+                            <div class="col-span-7 font-bold flex gap-2"><span>6.</span><span>Does the applicant possess any evidence of being addicted to the excessive use of alcohol tobacco or drugs?</span></div>
+                            <div class="col-span-5 formb-line uppercase" id="outFbQ6"></div>
+                        </div>
+
+                        <div class="grid grid-cols-12 gap-3 items-end">
+                            <div class="col-span-7 font-bold flex gap-2"><span>7.</span><span>In your opinion; he/she is generally fit as regards (a) bodily in health, and (b) eyesight?</span></div>
+                            <div class="col-span-5 formb-line uppercase" id="outFbQ7"></div>
+                        </div>
+
+                        <div class="grid grid-cols-12 gap-3 items-end">
+                            <div class="col-span-7 font-bold flex gap-2"><span>8.</span><span>Marks of identification.</span></div>
+                            <div class="col-span-5 formb-line uppercase" id="outFbQ8"></div>
+                        </div>
+
+                        <div class="grid grid-cols-12 gap-3 items-end">
+                            <div class="col-span-7 font-bold flex gap-2"><span>9.</span><span>Blood Group</span></div>
+                            <div class="col-span-5 formb-line uppercase" id="outFbQ9"></div>
+                        </div>
+                    </div>
+
+                    <!-- Certification Text -->
+                    <div class="mt-4 px-4 text-[11.5px] font-bold leading-relaxed">
+                        I certify that to the best of my knowledge and belief the applicant
+                        <span id="outFbAppName" class="inline-block border-b border-black min-w-[210px] px-2 text-center font-serif font-bold uppercase"></span>
+                        is the person here as above described and that the attached photograph is a reasonably correct likeness.
+                    </div>
+
+                    <!-- Bottom Photo Box & Doctor Signature Block -->
+                    <div class="mt-5 px-4 grid grid-cols-12 gap-6 items-start">
+                        <!-- Left: SPACE FOR PHOTOGRAPH Box -->
+                        <div class="col-span-4 flex justify-center">
+                            <div class="w-[135px] h-[155px] border-[1.5px] border-black flex items-center justify-center text-center overflow-hidden relative bg-white">
+                                <div id="fbPhotoPlaceholder" class="text-[11px] font-extrabold leading-snug px-2">
+                                    SPACE<br>FOR<br>PHOTOGRAPH
+                                </div>
+                                <img id="fbPhotoPreview" src="" alt="Applicant Photograph" class="hidden w-full h-full object-cover">
+                            </div>
+                        </div>
+
+                        <!-- Right: Doctor Details & 15-cell Doctor CNIC -->
+                        <div class="col-span-8 space-y-2 text-[11.5px] font-extrabold">
+                            <div class="flex items-end gap-2">
+                                <span>SIGNATURE</span>
+                                <div class="flex-1 border-b border-black"></div>
+                            </div>
+                            <div class="flex items-end gap-2">
+                                <span>NAME</span>
+                                <div id="outFbDocName" class="flex-1 border-b border-black px-2 font-serif uppercase"></div>
+                            </div>
+                            <div class="flex items-end gap-2">
+                                <span>R.M.P NO.</span>
+                                <div id="outFbRmpNo" class="flex-1 border-b border-black px-2 font-serif uppercase"></div>
+                            </div>
+                            <div>
+                                <div class="mb-1">DOCTOR'S NATIONAL IDENTITY CARD NO.</div>
+                                <div class="formb-cnic-grid" style="height: 24px;" id="outFbDocCnicGrid">
+                                    <div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div>
+                                    <div class="formb-cnic-cell">—</div>
+                                    <div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div><div class="formb-cnic-cell"></div>
+                                    <div class="formb-cnic-cell">—</div>
+                                    <div class="formb-cnic-cell"></div>
+                                </div>
+                            </div>
+                            <div class="flex items-end gap-2 pt-1">
+                                <span class="text-sm">Date</span>
+                                <div id="outFbDate" class="w-48 border-b border-black px-2 font-serif"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Urdu Instruction Note matching image_ed21a3.png -->
+                    <div class="mt-5 text-center urdu-font text-[11px] font-bold leading-loose">
+                        <div>(نوٹ) یہ تمام فارم معہ شناختی کارڈ نمبر میڈیکل آفیسر تصدیق کنندہ کا قلمی ہونا ضروری ہے</div>
+                        <div>درخواست دہندہ اس فارم پر کچھ لکھنے کا مجاز نہ ہے</div>
+                    </div>
+
+                </main>
+            </div>
+        </section>
+    </div>
+
+    <!-- =====================================================================
+         JAVASCRIPT APPLICATION LOGIC
+         ===================================================================== -->
     <script>
         /**
-         * Exact 14 Document Attached labels matching image_eefb3f.png
+         * 14 Exact Document Checklist items for Domicile Form
          */
-        const DOCUMENT_ITEMS = [
+        const DOMICILE_DOCS = [
             "CNIC",
             "Father CNIC",
             "Husband CNIC",
@@ -683,257 +1518,383 @@
             "Form-B"
         ];
 
-        /**
-         * Displays a non-intrusive toast message
-         */
-        let toastTimeout;
-        function showToast(message, isError = false) {
+        let toastTimer;
+        function showToast(msg, isError = false) {
             const banner = document.getElementById('toastBanner');
             const msgEl = document.getElementById('toastMessage');
             const iconEl = document.getElementById('toastIcon');
 
-            msgEl.textContent = message;
+            msgEl.textContent = msg;
             iconEl.textContent = isError ? '!' : '✓';
-            iconEl.className = isError ? 'text-rose-400 font-bold' : 'text-emerald-400 font-bold';
+            iconEl.className = isError
+                ? 'w-5 h-5 rounded-full bg-rose-600 text-white flex items-center justify-center text-xs font-bold'
+                : 'w-5 h-5 rounded-full bg-[#007A33] text-white flex items-center justify-center text-xs font-bold';
 
-            banner.classList.remove('translate-y-20', 'opacity-0');
+            banner.classList.remove('translate-y-24', 'opacity-0');
             banner.classList.add('translate-y-0', 'opacity-100');
 
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
                 banner.classList.remove('translate-y-0', 'opacity-100');
-                banner.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
+                banner.classList.add('translate-y-24', 'opacity-0');
+            }, 2800);
         }
 
         /**
-         * Initializes the 14 document checkboxes in the left sidebar
-         * and the corresponding 14 rows in the right A4 preview table
+         * SPA View Navigation between Portal Home and the 3 Form Editors
          */
-        function initDocumentLists() {
-            const checkboxGrid = document.getElementById('docCheckboxGrid');
-            const docTableBody = document.getElementById('outDocTableBody');
+        function navigateTo(viewName) {
+            const views = ['home', 'domicile', 'tasdeeq', 'formb'];
+            views.forEach(v => {
+                const el = document.getElementById(`view-${v}`);
+                const navEl = document.getElementById(`nav-${v}`);
+                if (el) {
+                    if (v === viewName) {
+                        el.classList.remove('hidden');
+                        if (v !== 'home') el.classList.add('flex');
+                    } else {
+                        el.classList.add('hidden');
+                        el.classList.remove('flex');
+                    }
+                }
+                if (navEl) {
+                    if (v === viewName) {
+                        navEl.classList.add('text-[#007A33]', 'font-bold');
+                        navEl.classList.remove('text-slate-700');
+                    } else {
+                        navEl.classList.remove('text-[#007A33]', 'font-bold');
+                        navEl.classList.add('text-slate-700');
+                    }
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-            checkboxGrid.innerHTML = '';
-            docTableBody.innerHTML = '';
+        /* ===================================================================
+           FORM 1: DOMICILE SUBMISSION FORM LOGIC
+           =================================================================== */
+        function initDomicileDocs() {
+            const chkContainer = document.getElementById('domDocCheckboxes');
+            const outBody = document.getElementById('outDomDocBody');
+            chkContainer.innerHTML = '';
+            outBody.innerHTML = '';
 
-            DOCUMENT_ITEMS.forEach((label, index) => {
-                // Left sidebar modern checkbox item
-                const itemWrapper = document.createElement('label');
-                itemWrapper.className = 'flex items-center gap-2.5 p-2 rounded-lg hover:bg-slate-50 cursor-pointer select-none border border-transparent hover:border-slate-200 transition';
-                itemWrapper.innerHTML = `
-                    <input type="checkbox" id="docChk_${index}" data-doc-index="${index}"
-                        class="w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
-                        onchange="syncDocuments()">
+            DOMICILE_DOCS.forEach((label, idx) => {
+                // Sidebar checkbox
+                const lbl = document.createElement('label');
+                lbl.className = 'flex items-center gap-2 p-1.5 rounded-lg hover:bg-white cursor-pointer select-none transition';
+                lbl.innerHTML = `
+                    <input type="checkbox" id="domChk_${idx}" class="w-4 h-4 rounded border-slate-300 text-[#007A33] focus:ring-[#007A33] cursor-pointer" onchange="syncDomicileDocs()">
                     <span class="text-xs font-medium text-slate-700">${label}</span>
                 `;
-                checkboxGrid.appendChild(itemWrapper);
+                chkContainer.appendChild(lbl);
 
-                // Right A4 preview table row
+                // A4 Table row (also directly clickable on preview!)
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="doc-label-cell">${label}:</td>
-                    <td class="doc-check-cell" id="outDocCheck_${index}"></td>
+                    <td class="doc-check-cell" id="outDomChk_${idx}" title="Click to toggle checkmark" onclick="toggleDomDocDirect(${idx})"></td>
                 `;
-                docTableBody.appendChild(tr);
+                outBody.appendChild(tr);
             });
         }
 
-        /**
-         * Formats CNIC as XXXXX-XXXXXXX-X while typing and updates the 13 live boxes
-         */
-        function handleCnicInput(input) {
-            const rawDigits = input.value.replace(/\D/g, '').slice(0, 13);
-            let formatted = '';
-
-            if (rawDigits.length > 0) {
-                formatted = rawDigits.slice(0, 5);
-            }
-            if (rawDigits.length > 5) {
-                formatted += '-' + rawDigits.slice(5, 12);
-            }
-            if (rawDigits.length > 12) {
-                formatted += '-' + rawDigits.slice(12, 13);
-            }
-
-            input.value = formatted;
-
-            // Populate the 13 individual boxes in the A4 preview
-            const boxes = document.querySelectorAll('#outNicGrid .digit-box');
-            boxes.forEach((box, idx) => {
-                box.textContent = rawDigits[idx] || '';
-            });
-        }
-
-        /**
-         * Handles network dropdown selection to pre-fill prefix in Mobile input
-         */
-        function handleNetworkChange() {
-            const networkSelect = document.getElementById('inNetwork');
-            const mobileInput = document.getElementById('inMobile');
-            const prefix = networkSelect.value;
-
-            if (prefix) {
-                const currentDigits = mobileInput.value.replace(/\D/g, '');
-                const restDigits = currentDigits.length > 3 ? currentDigits.slice(3) : '';
-                mobileInput.value = prefix + restDigits;
-                handleMobileInput(mobileInput);
-                mobileInput.focus();
+        function toggleDomDocDirect(idx) {
+            const chk = document.getElementById(`domChk_${idx}`);
+            if (chk) {
+                chk.checked = !chk.checked;
+                syncDomicileDocs();
             }
         }
 
-        /**
-         * Formats Mobile Number as 03XX-XXXXXXX while typing and updates the 11 live boxes
-         */
-        function handleMobileInput(input) {
-            const rawDigits = input.value.replace(/\D/g, '').slice(0, 11);
-            let formatted = '';
-
-            if (rawDigits.length > 0) {
-                formatted = rawDigits.slice(0, 4);
-            }
-            if (rawDigits.length > 4) {
-                formatted += '-' + rawDigits.slice(4, 11);
-            }
-
-            input.value = formatted;
-
-            // Populate the 11 individual boxes in the A4 preview
-            const boxes = document.querySelectorAll('#outMobileGrid .digit-box');
-            boxes.forEach((box, idx) => {
-                box.textContent = rawDigits[idx] || '';
-            });
-        }
-
-        /**
-         * Syncs all text/select inputs from the left sidebar to the right A4 preview
-         */
-        function syncForm() {
-            document.getElementById('outFullName').textContent = document.getElementById('inFullName').value.trim();
-            document.getElementById('outFatherName').textContent = document.getElementById('inFatherName').value.trim();
-            document.getElementById('outAddress').textContent = document.getElementById('inAddress').value.trim();
-            document.getElementById('outPlace').textContent = document.getElementById('inPlace').value.trim();
-            document.getElementById('outTehsil').textContent = document.getElementById('inTehsil').value.trim();
-            document.getElementById('outDateArrival').textContent = document.getElementById('inDateArrival').value.trim();
-            document.getElementById('outOccupation').textContent = document.getElementById('inOccupation').value.trim();
-            document.getElementById('outDob').textContent = document.getElementById('inDob').value.trim();
-            document.getElementById('outMarkId').textContent = document.getElementById('inMarkId').value.trim();
-            document.getElementById('outNicHolder').textContent = document.getElementById('inNicHolder').value.trim();
-            document.getElementById('outMarital').textContent = document.getElementById('inMarital').value.trim();
-            document.getElementById('outSpouse').textContent = document.getElementById('inSpouse').value.trim();
-            document.getElementById('outRemarks').textContent = document.getElementById('inRemarks').value.trim();
-        }
-
-        /**
-         * Syncs the 14 document checkboxes to the checkmark cells in the A4 preview
-         */
-        function syncDocuments() {
-            DOCUMENT_ITEMS.forEach((_, idx) => {
-                const checkbox = document.getElementById(`docChk_${idx}`);
-                const cell = document.getElementById(`outDocCheck_${idx}`);
-                if (checkbox && cell) {
-                    cell.textContent = checkbox.checked ? '✔' : '';
+        function syncDomicileDocs() {
+            DOMICILE_DOCS.forEach((_, idx) => {
+                const chk = document.getElementById(`domChk_${idx}`);
+                const cell = document.getElementById(`outDomChk_${idx}`);
+                if (chk && cell) {
+                    cell.textContent = chk.checked ? '✔' : '';
                 }
             });
         }
 
-        /**
-         * Fills sample data matching image_eefb3f.png for instant testing
-         */
-        function fillSampleData() {
-            document.getElementById('inFullName').value = 'HAFIZ MUAZ SAQIB';
-            document.getElementById('inFatherName').value = 'SAQIB HUSSAIN JANJUA';
-            document.getElementById('inAddress').value = 'PO KHAS CHACK NO 38 , TEHSIL & DISTRICT MANDI BAHAUDDIN';
-            document.getElementById('inPlace').value = 'MANDI BAHAUDDIN';
-            document.getElementById('inTehsil').value = 'MANDI BAHAUDDIN';
-            document.getElementById('inDateArrival').value = '29-07-2008';
-            document.getElementById('inOccupation').value = 'STUDENT';
-            document.getElementById('inDob').value = '29-07-2008';
-            document.getElementById('inMarkId').value = 'NIL';
-            document.getElementById('inNicHolder').value = 'SELF';
-            document.getElementById('inMarital').value = 'NO';
-            document.getElementById('inSpouse').value = '';
-            document.getElementById('inRemarks').value = '';
+        function handleDomCnic(input) {
+            const digits = input.value.replace(/\D/g, '').slice(0, 13);
+            let formatted = digits.slice(0, 5);
+            if (digits.length > 5) formatted += '-' + digits.slice(5, 12);
+            if (digits.length > 12) formatted += '-' + digits.slice(12, 13);
+            input.value = formatted;
 
-            // Trigger masked CNIC & Mobile formatting
-            const cnicInput = document.getElementById('inCnic');
-            cnicInput.value = '3440241713109';
-            handleCnicInput(cnicInput);
-
-            document.getElementById('inNetwork').value = '030';
-            const mobileInput = document.getElementById('inMobile');
-            mobileInput.value = '03027747032';
-            handleMobileInput(mobileInput);
-
-            syncForm();
-            showToast('Sample applicant details loaded into preview.');
+            const boxes = document.querySelectorAll('#outDomNicGrid .digit-box');
+            boxes.forEach((box, idx) => {
+                box.textContent = digits[idx] || '';
+            });
         }
 
-        /**
-         * Clears all inputs and resets the live A4 preview
-         */
-        function clearForm() {
-            const textIds = [
-                'inFullName', 'inFatherName', 'inAddress', 'inPlace', 'inTehsil',
-                'inDateArrival', 'inOccupation', 'inDob', 'inMarkId', 'inNicHolder',
-                'inSpouse', 'inRemarks', 'inCnic', 'inMobile'
-            ];
-            textIds.forEach(id => {
-                document.getElementById(id).value = '';
+        function handleDomMobile(input) {
+            const digits = input.value.replace(/\D/g, '').slice(0, 11);
+            let formatted = digits.slice(0, 4);
+            if (digits.length > 4) formatted += '-' + digits.slice(4, 11);
+            input.value = formatted;
+
+            const boxes = document.querySelectorAll('#outDomMobileGrid .digit-box');
+            boxes.forEach((box, idx) => {
+                box.textContent = digits[idx] || '';
             });
+        }
 
-            document.getElementById('inNetwork').value = '';
-            document.getElementById('inMarital').value = '';
+        function syncDomicile() {
+            document.getElementById('outDomFullName').textContent = document.getElementById('domFullName').value.trim();
+            document.getElementById('outDomFatherName').textContent = document.getElementById('domFatherName').value.trim();
+            document.getElementById('outDomAddress').textContent = document.getElementById('domAddress').value.trim();
+            document.getElementById('outDomPlace').textContent = document.getElementById('domPlace').value.trim();
+            document.getElementById('outDomTehsil').textContent = document.getElementById('domTehsil').value.trim();
+            document.getElementById('outDomArrival').textContent = document.getElementById('domArrival').value.trim();
+            document.getElementById('outDomOccupation').textContent = document.getElementById('domOccupation').value.trim();
+            document.getElementById('outDomDob').textContent = document.getElementById('domDob').value.trim();
+            document.getElementById('outDomMarkId').textContent = document.getElementById('domMarkId').value.trim();
+            document.getElementById('outDomNicHolder').textContent = document.getElementById('domNicHolder').value.trim();
+            document.getElementById('outDomMarital').textContent = document.getElementById('domMarital').value.trim();
+            document.getElementById('outDomSpouse').textContent = document.getElementById('domSpouse').value.trim();
+            document.getElementById('outDomRemarks').textContent = document.getElementById('domRemarks').value.trim();
+        }
 
-            handleCnicInput(document.getElementById('inCnic'));
-            handleMobileInput(document.getElementById('inMobile'));
-            syncForm();
+        function fillDomicileSample() {
+            document.getElementById('domFullName').value = 'HAFIZ MUAZ SAQIB';
+            document.getElementById('domFatherName').value = 'SAQIB HUSSAIN JANJUA';
+            document.getElementById('domAddress').value = 'PO KHAS CHACK NO 38 , TEHSIL & DISTRICT MANDI BAHAUDDIN';
+            document.getElementById('domPlace').value = 'MANDI BAHAUDDIN';
+            document.getElementById('domTehsil').value = 'MANDI BAHAUDDIN';
+            document.getElementById('domArrival').value = '29-07-2008';
+            document.getElementById('domOccupation').value = 'STUDENT';
+            document.getElementById('domDob').value = '29-07-2008';
+            document.getElementById('domMarkId').value = 'NIL';
+            document.getElementById('domNicHolder').value = 'SELF';
+            document.getElementById('domMarital').value = 'NO';
+            document.getElementById('domSpouse').value = '';
+            document.getElementById('domRemarks').value = '';
 
-            DOCUMENT_ITEMS.forEach((_, idx) => {
-                const chk = document.getElementById(`docChk_${idx}`);
+            const cnicEl = document.getElementById('domCnic');
+            cnicEl.value = '3440241713109';
+            handleDomCnic(cnicEl);
+
+            const mobEl = document.getElementById('domMobile');
+            mobEl.value = '03027747032';
+            handleDomMobile(mobEl);
+
+            syncDomicile();
+            showToast('Domicile sample details loaded.');
+        }
+
+        function clearDomicileForm() {
+            const ids = ['domFullName', 'domFatherName', 'domAddress', 'domPlace', 'domTehsil', 'domArrival', 'domOccupation', 'domDob', 'domMarkId', 'domNicHolder', 'domSpouse', 'domRemarks', 'domCnic', 'domMobile'];
+            ids.forEach(id => document.getElementById(id).value = '');
+            document.getElementById('domMarital').value = '';
+            handleDomCnic(document.getElementById('domCnic'));
+            handleDomMobile(document.getElementById('domMobile'));
+            syncDomicile();
+            DOMICILE_DOCS.forEach((_, idx) => {
+                const chk = document.getElementById(`domChk_${idx}`);
                 if (chk) chk.checked = false;
             });
-            syncDocuments();
-
-            showToast('Form cleared.');
+            syncDomicileDocs();
+            showToast('Domicile form cleared.');
         }
 
-        /**
-         * Generates and downloads a single-page A4 PDF of the live document sheet
-         */
-        async function downloadPDF() {
-            const sheet = document.getElementById('domicileFormSheet');
-            const btn = document.getElementById('downloadPdfBtn');
-            const originalBtnHtml = btn.innerHTML;
+        /* ===================================================================
+           FORM 2: TASDEEQ NAMA (URDU) LOGIC
+           =================================================================== */
+        function syncTasdeeq() {
+            document.getElementById('outTasName').textContent = document.getElementById('tasApplicantName').value.trim();
+            document.getElementById('outTasFather').textContent = document.getElementById('tasFatherName').value.trim();
+            document.getElementById('outTasAddress').textContent = document.getElementById('tasAddress').value.trim();
+            document.getElementById('outTasChallanNo').textContent = document.getElementById('tasChallanNo').value.trim();
+            document.getElementById('outTasChallanDate').textContent = document.getElementById('tasChallanDate').value.trim();
+        }
+
+        function setTasdeeqInk(color) {
+            const targets = ['outTasName', 'outTasFather', 'outTasAddress', 'outTasChallanNo', 'outTasChallanDate'];
+            const blueBtn = document.getElementById('inkBtnBlue');
+            const blackBtn = document.getElementById('inkBtnBlack');
+
+            targets.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.classList.remove('tasdeeq-ink-blue', 'tasdeeq-ink-black');
+                el.classList.add(color === 'blue' ? 'tasdeeq-ink-blue' : 'tasdeeq-ink-black');
+            });
+
+            if (color === 'blue') {
+                blueBtn.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-[#1a35b8] text-white cursor-pointer';
+                blackBtn.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 border border-slate-300 cursor-pointer';
+            } else {
+                blackBtn.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-slate-900 text-white cursor-pointer';
+                blueBtn.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 border border-slate-300 cursor-pointer';
+            }
+        }
+
+        function fillTasdeeqSample() {
+            document.getElementById('tasApplicantName').value = 'حافظ معاذ ثاقب';
+            document.getElementById('tasFatherName').value = 'ثاقب حسین جنجوعہ';
+            document.getElementById('tasAddress').value = 'ڈاکخانہ خاص چک نمبر 38 تحصیل و ضلع منڈی بہاؤالدین';
+            document.getElementById('tasChallanNo').value = '#558738498751';
+            document.getElementById('tasChallanDate').value = '16-11-2026';
+            syncTasdeeq();
+            showToast('Urdu Tasdeeq Nama sample loaded.');
+        }
+
+        function clearTasdeeqForm() {
+            ['tasApplicantName', 'tasFatherName', 'tasAddress', 'tasChallanNo', 'tasChallanDate'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            syncTasdeeq();
+            showToast('Tasdeeq Nama cleared.');
+        }
+
+        /* ===================================================================
+           FORM 3: FORM B (MEDICAL CERTIFICATE + PHOTO) LOGIC
+           =================================================================== */
+        function handleFormBCnic(input, gridId) {
+            const digits = input.value.replace(/\D/g, '').slice(0, 13);
+            let formatted = digits.slice(0, 5);
+            if (digits.length > 5) formatted += '-' + digits.slice(5, 12);
+            if (digits.length > 12) formatted += '-' + digits.slice(12, 13);
+            input.value = formatted;
+
+            const cells = document.querySelectorAll(`#${gridId} .formb-cnic-cell`);
+            // 15 cells: indices 0..4 (5 digits), 5 (hyphen), 6..12 (7 digits), 13 (hyphen), 14 (1 digit)
+            const digitPositions = [0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 14];
+            digitPositions.forEach((cellIndex, dIdx) => {
+                if (cells[cellIndex]) {
+                    cells[cellIndex].textContent = digits[dIdx] || '';
+                }
+            });
+        }
+
+        function syncFormB() {
+            document.getElementById('outFbAppName').textContent = document.getElementById('fbAppName').value.trim();
+            document.getElementById('outFbQ1').textContent = document.getElementById('fbQ1').value.trim();
+            document.getElementById('outFbQ2').textContent = document.getElementById('fbQ2').value.trim();
+            document.getElementById('outFbQ3').textContent = document.getElementById('fbQ3').value.trim();
+            document.getElementById('outFbQ4').textContent = document.getElementById('fbQ4').value.trim();
+            document.getElementById('outFbQ5').textContent = document.getElementById('fbQ5').value.trim();
+            document.getElementById('outFbQ6').textContent = document.getElementById('fbQ6').value.trim();
+            document.getElementById('outFbQ7').textContent = document.getElementById('fbQ7').value.trim();
+            document.getElementById('outFbQ8').textContent = document.getElementById('fbQ8').value.trim();
+            document.getElementById('outFbQ9').textContent = document.getElementById('fbQ9').value.trim();
+            document.getElementById('outFbDocName').textContent = document.getElementById('fbDocName').value.trim();
+            document.getElementById('outFbRmpNo').textContent = document.getElementById('fbRmpNo').value.trim();
+            document.getElementById('outFbDate').textContent = document.getElementById('fbDate').value.trim();
+        }
+
+        function handleFormBPhotoUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.getElementById('fbPhotoPreview');
+                    const placeholder = document.getElementById('fbPhotoPlaceholder');
+                    img.src = e.target.result;
+                    img.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                    showToast('Photograph added to Form B.');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function setPhotoFit(fitMode) {
+            const img = document.getElementById('fbPhotoPreview');
+            const coverBtn = document.getElementById('fitCoverBtn');
+            const containBtn = document.getElementById('fitContainBtn');
+
+            if (fitMode === 'cover') {
+                img.classList.remove('object-contain');
+                img.classList.add('object-cover');
+                coverBtn.className = 'px-2 py-0.5 rounded text-[11px] font-bold bg-[#007A33] text-white cursor-pointer';
+                containBtn.className = 'px-2 py-0.5 rounded text-[11px] font-bold bg-white text-slate-700 border border-slate-300 cursor-pointer';
+            } else {
+                img.classList.remove('object-cover');
+                img.classList.add('object-contain');
+                containBtn.className = 'px-2 py-0.5 rounded text-[11px] font-bold bg-[#007A33] text-white cursor-pointer';
+                coverBtn.className = 'px-2 py-0.5 rounded text-[11px] font-bold bg-white text-slate-700 border border-slate-300 cursor-pointer';
+            }
+        }
+
+        function removeFormBPhoto() {
+            const img = document.getElementById('fbPhotoPreview');
+            const placeholder = document.getElementById('fbPhotoPlaceholder');
+            const input = document.getElementById('fbPhotoInput');
+            img.src = '';
+            img.classList.add('hidden');
+            placeholder.classList.remove('hidden');
+            input.value = '';
+            showToast('Photograph removed.');
+        }
+
+        function fillFormBSample() {
+            const appCnic = document.getElementById('fbAppCnic');
+            appCnic.value = '3440241713109';
+            handleFormBCnic(appCnic, 'outFbAppCnicGrid');
+
+            document.getElementById('fbAppName').value = 'HAFIZ MUAZ SAQIB';
+            document.getElementById('fbQ1').value = '18 YEARS';
+            document.getElementById('fbQ2').value = 'NO';
+            document.getElementById('fbQ3').value = 'NO';
+            document.getElementById('fbQ4').value = 'NORMAL';
+            document.getElementById('fbQ5').value = 'NO';
+            document.getElementById('fbQ6').value = 'NO';
+            document.getElementById('fbQ7').value = 'FIT';
+            document.getElementById('fbQ8').value = 'NIL';
+            document.getElementById('fbQ9').value = 'B+';
+            document.getElementById('fbDocName').value = 'DR. MUHAMMAD TARIQ';
+            document.getElementById('fbRmpNo').value = '48291-P';
+            document.getElementById('fbDate').value = '16-11-2026';
+
+            const docCnic = document.getElementById('fbDocCnic');
+            docCnic.value = '3440212345671';
+            handleFormBCnic(docCnic, 'outFbDocCnicGrid');
+
+            syncFormB();
+            showToast('Form B sample data loaded.');
+        }
+
+        function clearFormB() {
+            ['fbAppCnic', 'fbAppName', 'fbQ1', 'fbQ2', 'fbQ3', 'fbQ4', 'fbQ5', 'fbQ6', 'fbQ7', 'fbQ8', 'fbQ9', 'fbDocName', 'fbRmpNo', 'fbDocCnic', 'fbDate'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            handleFormBCnic(document.getElementById('fbAppCnic'), 'outFbAppCnicGrid');
+            handleFormBCnic(document.getElementById('fbDocCnic'), 'outFbDocCnicGrid');
+            syncFormB();
+            removeFormBPhoto();
+            showToast('Form B cleared.');
+        }
+
+        /* ===================================================================
+           SHARED SINGLE-PAGE A4 PDF EXPORT ENGINE
+           =================================================================== */
+        async function exportSheetPDF(sheetId, defaultFileName, btnElement) {
+            const sheet = document.getElementById(sheetId);
+            const originalHtml = btnElement.innerHTML;
 
             try {
-                btn.disabled = true;
-                btn.innerHTML = '<span>Generating PDF...</span>';
+                btnElement.disabled = true;
+                btnElement.innerHTML = '<span>Generating PDF...</span>';
 
-                // Build clean filename from Full Name if available
-                const rawName = document.getElementById('inFullName').value.trim();
-                const safeName = rawName
-                    ? rawName.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_')
-                    : 'Domicile_Submission_Form';
-                const filename = `${safeName}_Domicile_Form.pdf`;
-
-                // Temporarily normalize box shadow and height for exact single-page A4 capture
-                const prevBoxShadow = sheet.style.boxShadow;
-                const prevMinHeight = sheet.style.minHeight;
+                const prevShadow = sheet.style.boxShadow;
+                const prevMinH = sheet.style.minHeight;
                 sheet.style.boxShadow = 'none';
-                sheet.style.minHeight = '280mm';
+                sheet.style.minHeight = '282mm';
 
                 const opt = {
-                    margin:       [4, 4, 4, 4],
-                    filename:     filename,
-                    image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  {
+                    margin: [3, 3, 3, 3],
+                    filename: `${defaultFileName}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: {
                         scale: 2,
                         useCORS: true,
                         letterRendering: true,
                         scrollY: 0
                     },
-                    jsPDF:        {
+                    jsPDF: {
                         unit: 'mm',
                         format: 'a4',
                         orientation: 'portrait'
@@ -942,23 +1903,24 @@
 
                 await html2pdf().set(opt).from(sheet).save();
 
-                sheet.style.boxShadow = prevBoxShadow;
-                sheet.style.minHeight = prevMinHeight;
-
-                showToast('A4 PDF downloaded successfully!');
-            } catch (error) {
-                console.error('PDF Generation Error:', error);
-                showToast('Opening browser print dialog...', true);
-                setTimeout(() => window.print(), 500);
+                sheet.style.boxShadow = prevShadow;
+                sheet.style.minHeight = prevMinH;
+                showToast(`${defaultFileName}.pdf downloaded!`);
+            } catch (err) {
+                console.error('PDF Export Error:', err);
+                showToast('Opening print dialog...', true);
+                setTimeout(() => window.print(), 400);
             } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalBtnHtml;
+                btnElement.disabled = false;
+                btnElement.innerHTML = originalHtml;
             }
         }
 
-        // Initialize document lists on load
+        // Initialize on page load
         document.addEventListener('DOMContentLoaded', () => {
-            initDocumentLists();
+            initDomicileDocs();
+            fillDomicileSample();
+            fillTasdeeqSample();
         });
     </script>
 </body>
